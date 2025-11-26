@@ -71,7 +71,6 @@ def admin_dashboard(request):
 @login_required
 def dashboard(request):
     hospital = request.user.hospital
-    print(hospital)
 
     data = r.hget("Central", hospital.nome)
     if data:
