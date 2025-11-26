@@ -109,11 +109,3 @@ def hospital_data(request):
         return JsonResponse(json.loads(data)) #type: ignore
         
     return JsonResponse({'error': 'Sem dados'}, status=404)
-
-@login_required
-def oxygen_data(request):
-    hospital = request.user.hospital
-    data = r.hget("Usina", hospital.nome)
-    if not data:
-        return JsonResponse({'error': 'Sem dados'}, status=404)
-    return JsonResponse(json.loads(data)) #type: ignore
