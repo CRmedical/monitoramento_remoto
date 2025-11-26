@@ -80,34 +80,34 @@
                 <div class="card">
                     <h3><i class="fas fa-plug"></i> Compressor 1</h3>
                     <div class="status" id="c1-status">
-                        <span class="status-text">{{ oxygen_details.C1 }}</span>
+                        <span class="status-text">{{ hospital_details.C1 }}</span>
                     </div>
                 </div>
                 {% endif %}
         
-                {% if oxygen_details.C2 %}
+                {% if hospital_details.C2 %}
                 <div class="card">
                     <h3><i class="fas fa-plug"></i> Compressor 2</h3>
                     <div class="status" id="c2-status">
-                        <span class="status-text">{{ oxygen_details.C2 }}</span>
+                        <span class="status-text">{{ hospital_details.C2 }}</span>
                     </div>
                 </div>
                 {% endif %}
         
-                {% if oxygen_details.BE %}
+                {% if hospital_details.BE %}
                 <div class="card">
                     <h3><i class="fas fa-bolt"></i> Botão de Emergência</h3>
                     <div class="status" id="be-status">
-                        <span class="status-text">{{ oxygen_details.BE }}</span>
+                        <span class="status-text">{{ hospital_details.BE }}</span>
                     </div>
                 </div>
                 {% endif %}
         
-                {% if oxygen_details.RST %}
+                {% if hospital_details.RST %}
                 <div class="card">
                     <h3><i class="fas fa-redo"></i> Falta de Fase</h3>
                     <div class="status" id="rst-status">
-                        <span class="status-text">{{ oxygen_details.RST }}</span>
+                        <span class="status-text">{{ hospital_details.RST }}</span>
                     </div>
                 </div>
                 {% endif %}
