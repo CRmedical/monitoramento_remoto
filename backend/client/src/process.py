@@ -34,7 +34,7 @@ class ProcessData:
     """
 
     USINA_RULES = [
-        ("Purity",            operator.lt,  90.0,  "Low purity: {value}%"),
+        ("purity",            operator.lt,  90.0,  "Low purity: {value}%"),
         ("product_pressure",  operator.lt,   5.0,  "Low product pressure: {value}"),
         ("pressure",          operator.lt,   5.0,  "Low central pressure: {value}"),
         ("dew_point",         operator.gt, -45.0,  "High dew point: {value}"),
@@ -42,8 +42,8 @@ class ProcessData:
     ]
 
     FLAG_RULES = [
-        ("RST", operator.eq, "FALHA", "RST failure detected"),
-        ("BE",  operator.eq, "FALHA", "Emergency button activated"),
+        ("RST", operator.ne, "OK", "RST failure detected"),
+        ("BE",  operator.ne, "OK", "Emergency button activated"),
     ]
 
     HOSPITAL_RULES = [
@@ -177,18 +177,17 @@ class ProcessData:
             ... }
             >>> subject, body = cls._handle_usina_email(data)
         """
-        psa = data["Data"].get("usina", {})
-        central = data["Data"].get("central", {})
-
-        all_values = {**psa, **central}
-
+        psa = data["Data"]
+        print(psa)
+        all_values = {**psa}
+       
         subject, body = cls.process_alert(
             name="Oxygen Plant",
             hospital=data["Hospital"],
             values=all_values,
             rules=cls.USINA_RULES,
             safe_get=cls.__safe_get,
-            extra_data={"psa": psa, "central": central}
+            extra_data={"psa": psa}
         )
         return subject, body
 

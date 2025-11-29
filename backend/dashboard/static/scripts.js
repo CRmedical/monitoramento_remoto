@@ -156,7 +156,8 @@ function updateStatusText(id, value) {
     if (value === "Ligado") {
         el.style.color = "#00cc44";
     } else if (value === "Desligado") {
-        el.style.color = "#ff4444";
+        el.style.color = "#001fccff";
+        el.textContent = "Stand-by";
     } else {
         el.style.color = "#666";
     }

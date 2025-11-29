@@ -50,7 +50,7 @@ class HandleMail:
 
     _email_lock = Lock()
     _last_email_time: Dict[str, float] = {}
-    EMAIL_COOLDOWN = 300  # 5 minutes
+    EMAIL_COOLDOWN = 1800  # 5 minutes
     MAX_RETRIES = 3
     RETRY_DELAY = 5  # seconds between attempts
     
