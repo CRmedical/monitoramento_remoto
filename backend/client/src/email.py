@@ -103,42 +103,46 @@ class HandleMail:
         return cls._settings #type:ignore
 
     @classmethod
+    def _is_alert(cls, title: str) -> bool:
+        """Return True only if this email should be sent (real alert)."""
+        return isinstance(title, str) and title.startswith("ALERT")
+
+    @classmethod
     def send(cls, data: Any) -> bool:
-        """
-        Send email notification based on data type and hospital configuration.
-        Args:
-            data (Any): The data to process and send via email. Can be a dictionary with hospital
-                        and type information, or a string for offline mail handling.
-        Returns:
-            bool: True if email was sent successfully, False otherwise.
-        Raises:
-            Catches all exceptions and logs them, returning False on error.
-        Notes:
-            - For dictionary input: Processes hospital name and checks if email should be sent
-            - For "usina" type: Handles power plant email processing
-            - For other types: Handles hospital email processing
-            - For non-dict input: Sends offline mail with string representation of data
-            - Logs hospital name and any errors during processing
-        """
-    
         if isinstance(data, dict):
             try:
                 hospital_name = data.get("Hospital", "Unknown")
                 logger.info(f"Processing data for hospital: {hospital_name}")
-                
+
+                # cooldown
                 if not cls._should_send_email(hospital_name):
                     return False
-                
+
+                # usina
                 if data.get("tipo") == "usina":
-                    mail_status_usina = cls.__send_email(*ProcessData._handle_usina_email(data))
-                    return mail_status_usina
+                    title, body = ProcessData._handle_usina_email(data)
+                    print(data)
+                    if not cls._is_alert(title):
+                        logger.info(f"No alert for {hospital_name}, skipping email.")
+                        return False
+
+                    return cls.__send_email(title, body)
+
+                # hospital
                 else:
-                    mail_status_central = cls.__send_email(*ProcessData._handle_hospital_email(data))
-                    return mail_status_central
-        
+                    title, body = ProcessData._handle_hospital_email(data)
+                    print(data)
+                    if not cls._is_alert(title):
+                        logger.info(f"No alert for {hospital_name}, skipping email.")
+                        return False
+
+                    return cls.__send_email(title, body)
+
             except Exception as e:
                 logger.error(f"General error in HandleMail.send: {e}")
                 return False
+
+        # offline mail
         else:
             return cls._send_offline_mail(str(data))
 

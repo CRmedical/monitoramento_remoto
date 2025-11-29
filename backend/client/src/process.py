@@ -178,7 +178,6 @@ class ProcessData:
             >>> subject, body = cls._handle_usina_email(data)
         """
         psa = data["Data"]
-        print(psa)
         all_values = {**psa}
        
         subject, body = cls.process_alert(
@@ -206,7 +205,6 @@ class ProcessData:
             KeyError: If required keys ("Data" or "Hospital") are missing from the input data.
         """
         hospital = data["Data"]
-
         return cls.process_alert(
             name="Hospital",
             hospital=data["Hospital"],
