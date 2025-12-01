@@ -3,7 +3,7 @@ from .process import ProcessData
 from .email_sender import EmailSender
 import time
 from typing import Dict, Any, Tuple, Optional
-
+from .manage_telegram import get_chat_id
 from .telegram import Telegram
 
 class AlertManager:
@@ -202,8 +202,11 @@ class AlertManager:
         cls._last_alert_time[hospital_name] = time.time()
         
         success = EmailSender.send(title, body)
-        Telegram.send_message(-5043458545, body)
-
+        try: 
+            chat_id = get_chat_id(hospital_name)
+            Telegram.send_message(chat_id, body)
+        except:
+            Telegram.send_message(1538185358, body)
         
 
         if success:

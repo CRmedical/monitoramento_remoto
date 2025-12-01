@@ -23,9 +23,9 @@ def get_chat_id(nome):
 
     if chats:
         for chat in chats:
-            print(f"Chat Telegram: {chat.chat_id}")
+            return chat.chat_id
     else:
         print("Nenhum registro encontrado para este hospital.")
 
 if __name__ == '__main__':
-    get_chat_id('Hospital da Crianca')
+    print(get_chat_id('Joao Machado - Natal/RN'))
