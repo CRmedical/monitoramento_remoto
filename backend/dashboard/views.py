@@ -54,6 +54,10 @@ def dashboard(request):
     if hospital.nome == 'CRADMIN':
         return redirect('admin_dashboard')
     
+    if hospital.nome == 'Tecnico':
+        return redirect('relatorio')
+       
+    
     keys = ["Central", "Usina"]
 
     for key in keys:
