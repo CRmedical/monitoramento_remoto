@@ -10,6 +10,11 @@ def custom_login(request):
         
         try: 
             hospital = str(request.user.hospital)
+            print(hospital)
+            if user is not None:
+                login(request, user)
+                if hospital == 'Tecnico':
+                    return redirect('relatorio')
         except:
             pass
         
