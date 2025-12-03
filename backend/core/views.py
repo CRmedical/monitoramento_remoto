@@ -20,10 +20,7 @@ def custom_login(request):
         
         if user is not None:
             login(request, user)
-            if hospital == 'Tecnico':
-                return redirect('relatorio')
-            else:
-                return redirect('admin_dashboard')
+            return redirect('admin_dashboard')
         else:
             return render(request, 'core/login.html', {'error': 'Usuário ou senha inválidos'})
 
