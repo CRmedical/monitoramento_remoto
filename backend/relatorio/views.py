@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import RelatorioForm, ImagemFormSet
 
-def index(request):
+def relatorio(request):
     template_name = 'relatorio/index.html'
     
     if request.method == 'POST':

@@ -7,10 +7,14 @@ def custom_login(request):
         password = request.POST['password']
 
         user = authenticate(request, username=username, password=password)
-
+        hospital = str(request.user.hospital)
+        
         if user is not None:
             login(request, user)
-            return redirect('admin_dashboard')
+            if hospital == 'Tecnico':
+                return redirect('relatorio')
+            else:
+                return redirect('admin_dashboard')
         else:
             return render(request, 'core/login.html', {'error': 'Usuário ou senha inválidos'})
 
