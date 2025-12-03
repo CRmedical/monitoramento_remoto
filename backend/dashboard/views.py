@@ -56,7 +56,6 @@ def dashboard(request):
     
     if hospital.nome == 'Tecnico':
         return redirect('relatorio')
-       
     
     keys = ["Central", "Usina"]
 
