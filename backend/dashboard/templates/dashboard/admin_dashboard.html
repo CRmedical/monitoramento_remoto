@@ -5,7 +5,10 @@
     
     {% block header_title %} Dashboard de Monitoramento Hospitalar {% endblock header_title %}
 
-
+    {% block extra_button %}
+        <a class="btn refresh-btn" href="{% url 'admin:index' %}">Admin</a>
+    {% endblock extra_button %}
+    
     {% block content %}
     
        <div class="main_table">

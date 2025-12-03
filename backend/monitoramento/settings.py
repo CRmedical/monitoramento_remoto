@@ -139,6 +139,12 @@ JAZZMIN_SETTINGS = {
 
     # Whether to show the UI customizer on the sidebar
     'show_ui_builder': False,
+    
+    "topmenu_links": [
+
+        {"name": "Voltar ao Site",  "url": "admin_dashboard", "permissions": ["auth.view_user"]},
+    ],
+
 }
 
 JAZZMIN_UI_TWEAKS = {
