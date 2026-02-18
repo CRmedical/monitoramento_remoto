@@ -123,8 +123,15 @@ JAZZMIN_SETTINGS = {
     'icons': {
         'auth': 'fas fa-users-cog',
         'auth.Group': 'fas fa-users',
+        'core.Usuario': 'fa-solid fa-hospital-user',
         'dashboard.CustomUser': 'fas fa-user',
         'dashboard.Hospital': 'fa-solid fa-hospital',
+        'dashboard.ChatTelegram': 'fa-solid fa-paper-plane',
+        'dashboard.Fault': 'fa-solid fa-triangle-exclamation',
+        'dashboard.OxygenCentral': 'fa-solid fa-lungs',
+        'dashboard.AirCentral': 'fa-solid fa-mask-ventilator',
+        'relatorio.Cliente': 'fa-solid fa-hospital',
+        'relatorio.Relatorio': 'fa-solid fa-clipboard',
     },
 
     # Welcome text on the login screen
