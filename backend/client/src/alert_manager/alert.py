@@ -2,6 +2,9 @@ from typing import Set
 from .entities import Fault
 from .interfaces import AlertRepository, Sender
 from .process import ProcessData
+from src.manage_telegram import DjangoAlertRepository
+
+django_alert_repository = DjangoAlertRepository()
 
 class AlertManager:
 
@@ -29,6 +32,7 @@ class AlertManager:
         
         self.active_alerts[identifier] = fault
         self.repository.save(fault)
+        django_alert_repository.save(fault)
         self.sender.send_fault(fault)
         return True
 

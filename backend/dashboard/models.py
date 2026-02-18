@@ -20,6 +20,6 @@ class ChatTelegram(models.Model):
 
 class Fault(models.Model):
     hospital = models.ForeignKey(Hospital, on_delete=models.CASCADE)
-    criado_em = models.DateTimeField(auto_now_add=True, null=True)
+    criado_em = models.DateTimeField(auto_now_add=True)
     falha = models.CharField(max_length=100)
     dados = models.CharField(max_length=200)
