@@ -14,31 +14,6 @@ class HospitalAdmin(admin.ModelAdmin):
         ),
     ]
 
-@admin.register(AirCentral)
-class AirCentralAdmin(admin.ModelAdmin):
-    list_display = ['hospital']
-    search_fields = ['hospital']
-    list_filter = ['hospital']
-
-    fieldsets = [
-        (
-            None, 
-            {'fields': ('hospital',)}
-        ),
-    ]
-
-@admin.register(OxygenCentral)
-class OxygenCentralAdmin(admin.ModelAdmin):
-    list_display = ['hospital']
-    search_fields = ['hospital']
-    list_filter = ['hospital']
-
-    fieldsets = [
-        (
-            None, 
-            {'fields': ('hospital',)}
-        ),
-    ]
 
 @admin.register(ChatTelegram)
 class ChatTelegramAdmin(admin.ModelAdmin):

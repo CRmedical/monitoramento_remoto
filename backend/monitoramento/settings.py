@@ -123,8 +123,7 @@ JAZZMIN_SETTINGS = {
     'icons': {
         'auth': 'fas fa-users-cog',
         'auth.Group': 'fas fa-users',
-        'core.Usuario': 'fa-solid fa-hospital-user',
-        'dashboard.CustomUser': 'fas fa-user',
+        'core.CustomUser': 'fa-solid fa-hospital-user',
         'dashboard.Hospital': 'fa-solid fa-hospital',
         'dashboard.ChatTelegram': 'fa-solid fa-paper-plane',
         'dashboard.Fault': 'fa-solid fa-triangle-exclamation',
