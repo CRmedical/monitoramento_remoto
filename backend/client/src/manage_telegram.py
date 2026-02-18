@@ -2,7 +2,6 @@ import os
 import sys
 import django
 from pathlib import Path
-import src.alert_manager
 
 # Caminho absoluto da raiz do projeto
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -40,7 +39,7 @@ class DjangoAlertRepository:
             self._hospital_cache[name] = hospital
         return self._hospital_cache[name]
 
-    def save(self, fault: src.alert_manager.Fault):
+    def save(self, fault):
         hospital = self._get_hospital(fault.hospital)
 
         Fault.objects.create(
