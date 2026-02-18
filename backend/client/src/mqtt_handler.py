@@ -3,11 +3,11 @@ import redis
 import threading
 import logging
 import paho.mqtt.client as mqtt
-from .alert_manager import AlertManager
-from .django_handler import sync_hospital
+from src.django_handler import sync_hospital
+from .alert_manager import AlertPipeline, ConnectionAlertPipeline
 
 logger = logging.getLogger(__name__)
-
+alert = AlertPipeline()
 
 class MqttHandler:
     """
@@ -62,7 +62,10 @@ class MqttHandler:
         """
         try:
             if msg.topic == "desconnection/topic":
-                self._process_alert_notification(msg.payload.decode())
+
+                desconection = ConnectionAlertPipeline()
+                desconection.check_hospital(msg.payload.decode())
+                
             else:
                 data = json.loads(msg.payload.decode())
                 self._process_database_data(data)
@@ -109,8 +112,9 @@ class MqttHandler:
         Executa em thread separada para não bloquear o MQTT.
         """
         def send_alert():
+            
             try:
-                AlertManager.process_data(data)
+                alert.check_hospital(data)
             except Exception as e:
                 logger.error(f"Erro ao processar alerta: {e}")
 

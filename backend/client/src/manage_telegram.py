@@ -26,6 +26,7 @@ def get_chat_id(nome):
             return chat.chat_id
     else:
         print("Nenhum registro encontrado para este hospital.")
+        print('Enviando pra o Supervisor...')
 
 if __name__ == '__main__':
     print(get_chat_id('Joao Machado - Natal/RN'))
