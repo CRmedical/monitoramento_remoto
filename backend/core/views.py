@@ -19,3 +19,13 @@ def custom_login(request):
 def custom_logout(request):
     logout(request)
     return redirect('login')
+
+
+from django.http import HttpResponse
+from django.conf import settings
+import os
+
+def service_worker(request):
+    sw_path = os.path.join(settings.BASE_DIR, 'global/static/service-worker.js')
+    with open(sw_path, 'r') as f:
+        return HttpResponse(f.read(), content_type='application/javascript')
