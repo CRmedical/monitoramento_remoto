@@ -89,5 +89,5 @@ class Connection:
         else:
             return cls(
                 hospital = 'else',
-                status = 'else'
+                status = payload
             )
