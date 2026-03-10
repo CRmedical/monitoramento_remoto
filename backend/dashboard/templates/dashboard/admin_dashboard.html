@@ -10,40 +10,26 @@
 
     {% include "nav.html" %}
     
-       <div class="main_table">
-            <table>
-                <tr>
-                    <th>Hospital</th>
-                    <th>P. Central</th>
-                    <th>P. Rede</th>
-                    <th>Ponto de Orvalho</th>
-                    <th>Pureza</th>
-                    <th>Pressão Produto</th>
-                    <th>Compressor 1</th>
-                    <th>Compressor 2</th>
-                    <th>B. Emergência</th>
-                    <th>Falta de Fase</th>
-                </tr>
-                {% for data in hospitals %}
-                <tr>
-                    <td data-label="Hospital">{{ data.hospital }}</td>
-                    <td data-label="P. Central">{{ data.pressure }}</td>
-                    <td data-label="P. Rede">{{ data.rede }}</td>
-                    <td data-label="Ponto de Orvalho">{{ data.dew_point }}</td>
-                    <td data-label="Pureza">{{ data.purity }}</td>
-                    <td data-label="Pressão Produto">{{ data.product_pressure }}</td>
-                    <td data-label="Compressor 1">{{ data.C1 }}</td>
-                    <td data-label="Compressor 2">{{ data.C2 }}</td>
-                    <td data-label="B. Emergência">{{ data.BE }}</td>
-                    <td data-label="Falta de Fase">{{ data.RST }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="3">Nenhum usuário encontrado.</td>
-                </tr>
-                {% endfor %}
-            </table>
+    <div class="hospital_cards">
+
+        {% for data in hospitals %}
+        <div class="hospital_card">
+
+            <div class="hospital_name">
+                {{ data.hospital }}
+            </div>
+
+            <div class="hospital_pressure">
+                {{ data.pressure }}
+                <span>bar</span>
+            </div>
+
         </div>
+        {% empty %}
+            <p>Nenhum hospital encontrado.</p>
+        {% endfor %}
+
+    </div>
      
 {% endblock content %}  
 

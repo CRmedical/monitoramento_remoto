@@ -5,10 +5,10 @@
 <link rel="stylesheet" href="{% static "css/search_bar.css" %}">
 
 <nav class="navbar">
-    <a href="{% url 'admin:index' %}">Admin</a>
+    <a href="{% url "admin_dashboard" %}">Home</a>
     <a href="{% url 'faults' %}">Falhas</a>
-    <a href="{% url "admin_dashboard" %}">Dashboard</a>
-
+    <a href="{% url 'admin:index' %}">Admin</a>
+    
     <form method="GET">
         <input type="search" name="hospital" placeholder="Buscar hospital..." value="{{ request.GET.hospital }}">
     </form>
