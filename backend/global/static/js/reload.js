@@ -1,6 +1,6 @@
 setInterval(function() {
     location.reload();
-}, 5000);
+}, 50000);
 
 document.getElementById("refresh-btn").addEventListener("click", function() {
     location.reload();

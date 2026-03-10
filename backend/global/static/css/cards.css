@@ -49,3 +49,8 @@
     font-size: 14px;
     color: #6b7280;
 }
+
+.hospital_card {
+    text-decoration: none;
+    color: inherit;
+}

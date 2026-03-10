@@ -1,0 +1,107 @@
+{% load static %}
+
+{% block extra_style %}
+    <link rel="stylesheet" href="{% static "css/modal.css" %}">
+{% endblock  %}
+
+<!-- Modal -->
+<div id="hospitalModal" class="modal-overlay" onclick="closeModalOnOverlay(event)">
+    <div class="modal-container">
+
+        <div class="modal-header">
+            <div class="modal-header-left">
+                <div class="modal-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                        <polyline points="9,22 9,12 15,12 15,22"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="modal-title" id="modalHospitalName">—</h2>
+                    <span class="modal-subtitle">Monitoramento em tempo real</span>
+                </div>
+            </div>
+            <button class="modal-close" onclick="closeModal()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Compressores -->
+        <div class="modal-section-title">Compressores</div>
+        <div class="compressors-row">
+            <div class="compressor-badge" id="badgeC1">
+                <span class="comp-label">C1</span>
+                <span class="comp-status" id="statusC1">—</span>
+            </div>
+            <div class="compressor-badge" id="badgeC2">
+                <span class="comp-label">C2</span>
+                <span class="comp-status" id="statusC2">—</span>
+            </div>
+            <div class="flag-badge" id="flagBE"   style="display:none"><span>BE</span><span class="flag-val" id="valBE">—</span></div>
+            <div class="flag-badge" id="flagRST"  style="display:none"><span>RST</span><span class="flag-val" id="valRST">—</span></div>
+            <div class="flag-badge" id="flagAuto" style="display:none"><span>AUTO</span><span class="flag-val" id="valAuto">—</span></div>
+            <div class="flag-badge" id="flagRede" style="display:none"><span>REDE</span><span class="flag-val" id="valRede">—</span></div>
+        </div>
+
+        <!-- Leituras -->
+        <div class="modal-section-title">Leituras</div>
+        <div class="metrics-grid">
+
+            <div class="metric-card">
+                <div class="metric-icon">⬤</div>
+                <div class="metric-info">
+                    <div class="metric-label">Pressão</div>
+                    <div class="metric-value"><span id="mPressure">—</span><small>bar</small></div>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-icon">💧</div>
+                <div class="metric-info">
+                    <div class="metric-label">Ponto de Orvalho</div>
+                    <div class="metric-value"><span id="mDewPoint">—</span><small>°C</small></div>
+                </div>
+            </div>
+
+            <!-- opcionais: mostrados apenas se o dado existir -->
+            <div class="metric-card" id="cardVacuo" style="display:none">
+                <div class="metric-icon">🔽</div>
+                <div class="metric-info">
+                    <div class="metric-label">Vácuo</div>
+                    <div class="metric-value"><span id="mVacuo">—</span><small>mmHg</small></div>
+                </div>
+            </div>
+
+            <div class="metric-card" id="cardProductPressure" style="display:none">
+                <div class="metric-icon">📊</div>
+                <div class="metric-info">
+                    <div class="metric-label">Pressão do Produto</div>
+                    <div class="metric-value"><span id="mProductPressure">—</span><small>bar</small></div>
+                </div>
+            </div>
+
+            <div class="metric-card" id="cardPurity" style="display:none">
+                <div class="metric-icon">✦</div>
+                <div class="metric-info">
+                    <div class="metric-label">Pureza</div>
+                    <div class="metric-value"><span id="mPurity">—</span><small>%</small></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeModal()">Fechar</button>
+        </div>
+    </div>
+</div>
+
+{{ hospitals|json_script:"hospitalsData" }}
+
+
+{% block extra_script %}
+    <script src="{% static 'js/reload.js' %}"></script>
+{% endblock extra_script %}

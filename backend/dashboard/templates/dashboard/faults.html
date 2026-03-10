@@ -1,16 +1,18 @@
 {% extends "base.html" %}
 {% load static %}
 
-    {% block title %} Dashboard MQTT - Monitoramento Hospitalar {% endblock title %}
+{% block title %} Dashboard MQTT - Monitoramento Hospitalar {% endblock title %}
     
-    {% block header_title %} Dashboard de Monitoramento Hospitalar {% endblock header_title %}
+{% block header_title %} Dashboard de Monitoramento Hospitalar {% endblock header_title %}
 
-    
-    {% block content %}
+{% block extra_style %}
+    <link rel="stylesheet" href="{% static "css/table.css" %}">
+{% endblock  %}
+
+{% block content %}
 
     {% include "nav.html" %}
     
-   
     <div class="main_table">
             <table>
                 <tr>
