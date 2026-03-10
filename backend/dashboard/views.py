@@ -3,6 +3,7 @@ import json
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from .models import Fault
 
 import os
 from dotenv import load_dotenv
@@ -96,3 +97,16 @@ def hospital_data(request):
         return JsonResponse(json.loads(data)) #type: ignore
         
     return JsonResponse({'error': 'Sem dados'}, status=404)
+
+@login_required
+def faults_admin_view(request):
+    faults = Fault.objects.all()
+    print(faults)
+    context = {
+        'faults': faults
+    }
+
+    return render(
+        request, 'dashboard/faults.html',
+        context
+    )

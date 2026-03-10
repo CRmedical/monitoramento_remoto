@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+
+    {% block title %} Dashboard MQTT - Monitoramento Hospitalar {% endblock title %}
+    
+    {% block header_title %} Dashboard de Monitoramento Hospitalar {% endblock header_title %}
+
+    
+    {% block content %}
+
+    {% include "nav.html" %}
+    
+       <div class="main_table">
+            <table>
+                <tr>
+                    <th>Hospital</th>
+                    <th>Falha</th>
+                    <th>Dados</th>
+                    <th>Criado</th>
+                </tr>
+                {% for fault in faults %}
+                <tr>
+                    <td data-label="Hospital">{{ fault.hospital }}</td>
+                    <td data-label="Falha">{{ fault.falha }}</td>
+                    <td data-label="Hospital">{{ fault.dados }}</td>
+                    <td data-label="Hospital">{{ fault.criado_em }}</td>
+                    
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3">Nenhuma Falha encontrada.</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+     
+{% endblock content %}  
+

@@ -1,0 +1,9 @@
+{% load static %}
+
+
+<link rel="stylesheet" href="{% static "css/navbar.css" %}">
+<nav class="navbar">
+    <a href="{% url 'admin:index' %}">Admin</a>
+    <a href="{% url 'faults' %}">Falhas</a>
+    <a href="{% url "admin_dashboard" %}">Dashboard</a>
+</nav>
