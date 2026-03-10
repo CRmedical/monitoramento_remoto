@@ -1,0 +1,47 @@
+/* Container da busca */
+form {
+    margin-right: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Campo de busca */
+form input[type="search"] {
+    width: 100%;
+    max-width: 420px;
+    padding: 12px 16px;
+    font-size: 15px;
+
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+
+    background-color: #ffffff;
+
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+/* Efeito quando seleciona */
+form input[type="search"]:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74,144,226,0.15);
+}
+
+/* Placeholder */
+form input::placeholder {
+    color: #999;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+
+    form {
+        padding: 0 10px;
+    }
+
+    form input[type="search"] {
+        max-width: 100%;
+        font-size: 14px;
+    }
+
+}

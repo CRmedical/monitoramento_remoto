@@ -100,8 +100,14 @@ def hospital_data(request):
 
 @login_required
 def faults_admin_view(request):
-    faults = Fault.objects.all().order_by('-criado_em')
-    print(faults)
+    hospital = request.GET.get('hospital')
+
+    faults = Fault.objects.all()
+
+    if hospital:
+        faults = faults.filter(hospital__nome__icontains=hospital)
+
+    faults = faults.order_by('-criado_em')
     context = {
         'faults': faults
     }
@@ -110,3 +116,4 @@ def faults_admin_view(request):
         request, 'dashboard/faults.html',
         context
     )
+
