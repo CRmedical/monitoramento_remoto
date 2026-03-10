@@ -100,7 +100,7 @@ def hospital_data(request):
 
 @login_required
 def faults_admin_view(request):
-    faults = Fault.objects.all()
+    faults = Fault.objects.all().order_by('-criado_em')
     print(faults)
     context = {
         'faults': faults
