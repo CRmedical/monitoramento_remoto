@@ -2,39 +2,26 @@
 {% load static %}
 
 {% block title %} Dashboard MQTT - Monitoramento Hospitalar {% endblock title %}
-    
 {% block header_title %} Dashboard de Monitoramento Hospitalar {% endblock header_title %}
 
 {% block extra_style %}
-    <link rel="stylesheet" href="{% static "css/cards.css" %}">
-{% endblock  %}
+    <link rel="stylesheet" href="{% static 'css/cards.css' %}">
+{% endblock %}
 
 {% block content %}
-
     {% include "nav.html" %}
-    
-    <div class="hospital_cards">
 
-        {% for data in hospitals %}
-        <a class="hospital_card" onclick="openModal({{ forloop.counter0 }})" data-index="{{ forloop.counter0 }}">
-            <div class="hospital_name">
-                {{ data.hospital }}
-            </div>
-
-            <div class="hospital_pressure">
-                {{ data.pressure }}
-                <span>bar</span>
-            </div>
-        </a>
-        {% endfor %}
-
+    {# Container preenchido dinamicamente pelo modal.js via fetch #}
+    <div class="hospital_cards" id="hospitalCards">
+        {# Os cards são renderizados via JS após GET /api/all-data/ #}
     </div>
-     
-    {% include "dashboard/modal.html" %}
 
-{% endblock content %}  
+    {% include "dashboard/modal.html" %}
+{% endblock content %}
 
 {% block extra_script %}
-    
+    <script>
+        window.ALL_DATA_URL = "{% url 'get_all_data' %}";
+    </script>
     <script src="{% static 'js/modal.js' %}"></script>
 {% endblock extra_script %}
