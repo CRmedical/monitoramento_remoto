@@ -117,3 +117,16 @@ def faults_admin_view(request):
         context
     )
 
+@login_required
+def get_all_data(request):
+    usinas = r.hgetall('Usina')
+    centrais = r.hgetall('Central')
+
+    usinas = {k: json.loads(v) for k, v in usinas.items()} #type: ignore
+    centrais = {k: json.loads(v) for k, v in centrais.items()} #type: ignore
+
+    data = {
+        "locais": {**usinas, **centrais}
+    }
+
+    return JsonResponse(data)
