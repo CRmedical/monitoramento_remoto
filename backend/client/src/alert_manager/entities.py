@@ -75,6 +75,8 @@ class Connection:
 
     @classmethod
     def from_str(cls, payload: str) -> 'Connection':
+        payload = payload.title()
+
         if payload.startswith('Online'):
             return cls(
                 hospital = payload.split('Online ')[1],
@@ -86,6 +88,7 @@ class Connection:
                 hospital = payload.split('Offline ')[1],
                 status = 'Offline'
                 )
+            
         else:
             return cls(
                 hospital = 'else',
