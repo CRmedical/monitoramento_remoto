@@ -103,5 +103,8 @@
 
 
 {% block extra_script %}
-    <script src="{% static 'js/reload.js' %}"></script>
+    <script>
+        window.ALL_DATA_URL = "{% url 'get_all_data' %}";
+    </script>
+    <script src="{% static 'js/modal.js' %}"></script>
 {% endblock extra_script %}
