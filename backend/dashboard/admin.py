@@ -35,3 +35,5 @@ class FaultAdmin(admin.ModelAdmin):
     list_filter = ['hospital', 'criado_em']
     ordering = ['-criado_em']
     list_select_related = ['hospital']
+
+    list_per_page = 1000
