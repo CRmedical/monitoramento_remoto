@@ -43,18 +43,46 @@
             <div class="flag-badge" id="flagBE"   style="display:none"><span>BE</span><span class="flag-val" id="valBE">—</span></div>
             <div class="flag-badge" id="flagRST"  style="display:none"><span>RST</span><span class="flag-val" id="valRST">—</span></div>
             <div class="flag-badge" id="flagAuto" style="display:none"><span>AUTO</span><span class="flag-val" id="valAuto">—</span></div>
-            <div class="flag-badge" id="flagRede" style="display:none"><span>REDE</span><span class="flag-val" id="valRede">—</span></div>
         </div>
 
         <!-- Leituras -->
         <div class="modal-section-title">Leituras</div>
         <div class="metrics-grid">
 
+            
             <div class="metric-card">
                 <div class="metric-icon">⬤</div>
                 <div class="metric-info">
                     <div class="metric-label">Pressão</div>
                     <div class="metric-value"><span id="mPressure">—</span><small>bar</small></div>
+                </div>
+            </div>
+            
+            <div class="metric-card" id="cardRede" style="display:none">
+                <div class="metric-icon">⬤</div>
+                <div class="metric-info">
+                    <div class="metric-label">Rede</div>
+                    <div class="metric-value"><span id="mRede">—</span><small>bar</small></div>
+                </div>
+            </div>
+
+            <div class="metric-card" id="cardAcumulado" style="display:none">
+                <div class="metric-icon">
+                    <i class="fa-solid fa-chart-simple" style="font-size: 24px; color: #0284c7;"></i>    
+                </div>
+                <div class="metric-info">
+                    <div class="metric-label">Acumulado</div>
+                    <div class="metric-value"><span id="mAcumulado">—</span><small>m³</small></div>
+                </div>
+            </div>
+
+            <div class="metric-card" id="cardVazao" style="display:none">
+                <div class="metric-icon">
+                    <i class="fa-solid fa-wind" style="font-size: 24px; color: #0284c7;"></i>
+                </div>
+                <div class="metric-info">
+                    <div class="metric-label">Vazão</div>
+                    <div class="metric-value"><span id="mVazao">—</span><small>m³/h</small></div>
                 </div>
             </div>
 

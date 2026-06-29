@@ -46,14 +46,17 @@ function openModal(index) {
     setFlag('flagBE',   'valBE',   d.BE);
     setFlag('flagRST',  'valRST',  d.RST);
     setFlag('flagAuto', 'valAuto', d.auto);
-    setFlag('flagRede', 'valRede', d.rede);
-
+    
     document.getElementById('mPressure').textContent = d.pressure  ?? '—';
     document.getElementById('mDewPoint').textContent = d.dew_point ?? '—';
-
+    
     setOptional('cardVacuo',           'mVacuo',           d.vacuo);
     setOptional('cardProductPressure', 'mProductPressure', d.product_pressure);
     setOptional('cardPurity',          'mPurity',          d.purity);
+    setOptional('cardRede', 'mRede', d.rede);
+    setOptional('cardAcumulado', 'mAcumulado', d.accumulated);
+    setOptional('cardVazao', 'mVazao', d.flow);
+
 
     document.getElementById('hospitalModal').classList.add('active');
     document.body.style.overflow = 'hidden';
