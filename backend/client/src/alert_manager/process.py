@@ -9,7 +9,7 @@ class ProcessData:
     USINA_RULES = [
         ("purity",            operator.lt,  90.0,  "Low purity: {value}%"),
         ("product_pressure",  operator.lt,   5.0,  "Low product pressure: {value}"),
-        ("pressure",          operator.lt,   5.0,  "Low central pressure: {value}"),
+        ("pressure",          operator.lt,   7.2,  "Low central pressure: {value}"),
         ("dew_point",         operator.gt, 5.0,  "High dew point: {value}"),
         ("line",              operator.lt,   5.0,  "Low line pressure: {value}"),
     ]
@@ -20,7 +20,7 @@ class ProcessData:
     ]
 
     HOSPITAL_RULES = [
-        ("pressure", operator.lt, 5.0, "Low pressure: {value}"),
+        ("pressure", operator.lt, 7.2, "Low pressure: {value}"),
         ("line",     operator.lt, 5.0, "Low line pressure: {value}"),
         ("dew_point", operator.gt, 5.0, "High dew point: {value}"),
     ]
