@@ -4,13 +4,23 @@ from .models import AirCentral, OxygenCentral, Hospital, ChatTelegram, Fault, Ho
 
 @admin.register(Hospital)
 class HospitalAdmin(admin.ModelAdmin):
-    list_display = ("nome", "grupo")
-    search_fields = ("nome",)
-    list_filter = ("grupo",)
+    list_display = (
+        "nome",
+        "grupo",
+        "multiplicador_acumulado",
+    )
+
+    search_fields = (
+        "nome",
+    )
+
+    list_filter = (
+        "grupo",
+    )
 
     fieldsets = (
         (
-            None,
+            "Informações",
             {
                 "fields": (
                     "nome",
@@ -18,7 +28,16 @@ class HospitalAdmin(admin.ModelAdmin):
                 )
             },
         ),
+        (
+            "Configuração da Telemetria",
+            {
+                "fields": (
+                    "multiplicador_acumulado",
+                ),
+            },
+        ),
     )
+    
 
 @admin.register(ChatTelegram)
 class ChatTelegramAdmin(admin.ModelAdmin):

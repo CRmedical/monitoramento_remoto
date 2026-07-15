@@ -55,7 +55,7 @@ function openModal(index) {
     setOptional('cardPurity',          'mPurity',          d.purity);
     setOptional('cardRede', 'mRede', d.rede);
     setOptional('cardAcumulado', 'mAcumulado', d.accumulated);
-    setOptional('cardVazao', 'mVazao', d.flow);
+    // setOptional('cardVazao', 'mVazao', d.flow);
 
 
     document.getElementById('hospitalModal').classList.add('active');

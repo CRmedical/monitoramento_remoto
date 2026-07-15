@@ -1,6 +1,7 @@
 from django.db import models
 from django.db import models
 from django.conf import settings
+from decimal import Decimal
 
 class HospitalGroup(models.Model):
     nome = models.CharField(max_length=100, unique=True)
@@ -24,6 +25,13 @@ class Hospital(models.Model):
         blank=True,
         related_name="hospitais"
     )
+
+    multiplicador_acumulado = models.DecimalField(
+                                                max_digits=12,
+                                                decimal_places=2, 
+                                                default=Decimal("1.00"),
+                                                verbose_name="Multiplicador do acumulado"
+                                                )
 
     def __str__(self):
         return self.nome

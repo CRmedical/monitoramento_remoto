@@ -14,46 +14,77 @@ redis_host = os.getenv('REDIS_HOST', 'localhost')
 redis_password = os.getenv('REDIS_PASSWORD')
 r = redis.Redis(host=redis_host, port=6379, db=0, password=redis_password, decode_responses=True)
 
+
+def processar_redis(hospitais_permitidos=None):
+    """
+    hospitais_permitidos:
+        None -> retorna todos
+        set() -> retorna apenas os hospitais do conjunto
+    """
+
+    multiplicadores = {
+        h.nome: h.multiplicador_acumulado
+        for h in Hospital.objects.all()
+    }
+
+    hospitais = []
+
+    for redis_key in ("Central", "Usina"):
+        redis_data = r.hgetall(redis_key)
+
+        for hospital_nome, dados in redis_data.items():
+
+            if hospitais_permitidos is not None and hospital_nome not in hospitais_permitidos:
+                continue
+
+            try:
+                detalhes = json.loads(dados)
+
+                if "accumulated" in detalhes:
+                    try:
+                        fator = float(multiplicadores.get(hospital_nome, 1.0))
+                        detalhes["accumulated"] = round(
+                            float(detalhes["accumulated"]) * fator,
+                            2
+                        )
+                        print(
+                            hospital_nome,
+                            detalhes.get("accumulated"),
+                            fator
+                        )
+                    except (TypeError, ValueError):
+                        print('erro')
+                        pass
+
+                detalhes["hospital"] = hospital_nome
+                hospitais.append(detalhes)
+
+            except Exception as e:
+                print(e)
+
+    return hospitais
+
+
 @login_required
 def admin_dashboard(request):
-    hospital = request.user.hospital
 
     if not request.user.is_superuser:
         return redirect("dashboard")
 
-    hospitals = []
-
-    central_data = r.hgetall("Central")
-    if central_data:
-        for hospital_nome, dados in central_data.items(): #type: ignore
-            try:
-                hospital_details = json.loads(dados)  
-                hospital_details["hospital"] = hospital_nome
-                hospitals.append(hospital_details)
-            except Exception as e:
-                print(f"Erro ao processar hospital {hospital_nome}: {e}")
-
-    usina_data = r.hgetall("Usina")
-    if usina_data:
-        for hospital_nome, dados in usina_data.items(): #type: ignore
-            try:
-                oxygen_details = json.loads(dados)  # dict
-                oxygen_details["hospital"] = hospital_nome
-                hospitals.append(oxygen_details)
-            except Exception as e:
-                print(f"Erro ao processar hospital {hospital_nome}: {e}")
-
-    context = {
-        "hospitals": hospitals
-    }
-    return render(request, "dashboard/admin_dashboard.html", context)
-
+    return render(
+        request,
+        "dashboard/admin_dashboard.html",
+        {
+            "hospitals": processar_redis()
+        }
+    )
 
 
 
 
 @login_required
 def group_dashboard(request):
+
     if request.user.grupo is None:
         return redirect("dashboard")
 
@@ -63,31 +94,13 @@ def group_dashboard(request):
         ).values_list("nome", flat=True)
     )
 
-    hospitals = []
-
-    for redis_key in ("Central", "Usina"):
-        redis_data = r.hgetall(redis_key)
-        print(redis_data)
-
-        for hospital_nome, dados in redis_data.items():
-            if hospital_nome not in hospitais_permitidos:
-                continue
-
-            try:
-                detalhes = json.loads(dados)
-                detalhes["hospital"] = hospital_nome
-                hospitals.append(detalhes)
-                print(detalhes)
-            except Exception as e:
-                print(e)
-    print(hospitals)
     return render(
         request,
         "dashboard/admin_dashboard.html",
         {
-            "hospitals": hospitals,
+            "hospitals": processar_redis(hospitais_permitidos),
             "grupo": request.user.grupo,
-        },
+        }
     )
 
 @login_required
@@ -107,28 +120,32 @@ def dashboard(request):
     
     keys = ["Central", "Usina"]
 
-    for key in keys:
+    for key in ("Central", "Usina"):
         data = r.hget(key, hospital.nome)
+
         if data:
-            hospital_details = json.loads(data)  # type: ignore
+            hospital_details = json.loads(data)
+
+            if "accumulated" in hospital_details:
+                try:
+                    hospital_details["accumulated"] = round(
+                        float(hospital_details["accumulated"]) *
+                        hospital.multiplicador_acumulado,
+                        2
+                    )
+                    print(hospital.multiplicador_acumulado)
+                except (TypeError, ValueError):
+                    print('erro')
+                    pass
+
             return render(
                 request,
-                'dashboard/dashboard_central.html',
+                "dashboard/dashboard_central.html",
                 {
-                    'hospital': hospital,
-                    'hospital_details': hospital_details
-                }
+                    "hospital": hospital,
+                    "hospital_details": hospital_details,
+                },
             )
-
-    # Se não achou em nenhuma das chaves
-    return render(
-        request,
-        'dashboard/hospital_404.html',
-        {
-            'hospital': hospital.nome,
-            'error': 'Detalhes do hospital não encontrados no Redis'
-        }
-    )
 
 
 @login_required
@@ -168,27 +185,25 @@ def faults_admin_view(request):
 def get_all_data(request):
 
     if request.user.is_superuser:
-        hospitais = None
+        hospitais_permitidos = None
+
     elif request.user.grupo:
-        hospitais = set(
+        hospitais_permitidos = set(
             Hospital.objects.filter(
                 grupo=request.user.grupo
             ).values_list("nome", flat=True)
         )
+
     else:
-        hospitais = {request.user.hospital.nome}
+        hospitais_permitidos = {request.user.hospital.nome}
+
+    hospitais = processar_redis(hospitais_permitidos)
 
     locais = {}
 
-    for redis_key in ("Central", "Usina"):
-        redis_data = r.hgetall(redis_key)
-
-        for nome, dados in redis_data.items():
-
-            if hospitais is not None and nome not in hospitais:
-                continue
-
-            locais[nome] = json.loads(dados)
+    for hospital in hospitais:
+        nome = hospital.pop("hospital")
+        locais[nome] = hospital
 
     return JsonResponse({
         "locais": locais
