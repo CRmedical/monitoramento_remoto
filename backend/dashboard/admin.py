@@ -1,19 +1,24 @@
 from django.contrib import admin
-from .models import AirCentral, OxygenCentral, Hospital, ChatTelegram, Fault
+from .models import AirCentral, OxygenCentral, Hospital, ChatTelegram, Fault, HospitalGroup
+
 
 @admin.register(Hospital)
 class HospitalAdmin(admin.ModelAdmin):
-    list_display = ['nome']
-    search_fields = ['nome']
-    list_filter = ['nome']
+    list_display = ("nome", "grupo")
+    search_fields = ("nome",)
+    list_filter = ("grupo",)
 
-    fieldsets = [
+    fieldsets = (
         (
-            None, 
-            {'fields': ('nome',)}
+            None,
+            {
+                "fields": (
+                    "nome",
+                    "grupo",
+                )
+            },
         ),
-    ]
-
+    )
 
 @admin.register(ChatTelegram)
 class ChatTelegramAdmin(admin.ModelAdmin):
@@ -37,3 +42,32 @@ class FaultAdmin(admin.ModelAdmin):
     list_select_related = ['hospital']
 
     list_per_page = 500
+
+
+
+
+@admin.register(HospitalGroup)
+class HospitalGroupAdmin(admin.ModelAdmin):
+    list_display = ("nome", "total_hospitais", "total_usuarios")
+    search_fields = ("nome",)
+    filter_horizontal = ("usuarios",)
+
+    fieldsets = (
+        (
+            None,
+            {
+                "fields": (
+                    "nome",
+                    "usuarios",
+                )
+            },
+        ),
+    )
+
+    def total_hospitais(self, obj):
+        return obj.hospitais.count()
+    total_hospitais.short_description = "Hospitais"
+
+    def total_usuarios(self, obj):
+        return obj.usuarios.count()
+    total_usuarios.short_description = "Usuários"

@@ -9,7 +9,9 @@
 {% endblock %}
 
 {% block content %}
-    {% include "nav.html" %}
+    {% if request.user.is_superuser %}
+        {% include "nav.html" %}
+    {% endif %}
 
     {# Container preenchido dinamicamente pelo modal.js via fetch #}
     <div class="hospital_cards" id="hospitalCards">

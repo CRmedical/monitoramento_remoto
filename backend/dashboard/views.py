@@ -3,7 +3,7 @@ import json
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from .models import Fault
+from .models import Fault, Hospital, HospitalGroup
 
 import os
 from dotenv import load_dotenv
@@ -18,8 +18,8 @@ r = redis.Redis(host=redis_host, port=6379, db=0, password=redis_password, decod
 def admin_dashboard(request):
     hospital = request.user.hospital
 
-    if not hasattr(request.user, "hospital") or hospital.nome != "CRADMIN":
-        return redirect("dashboard") 
+    if not request.user.is_superuser:
+        return redirect("dashboard")
 
     hospitals = []
 
@@ -48,15 +48,62 @@ def admin_dashboard(request):
     }
     return render(request, "dashboard/admin_dashboard.html", context)
 
+
+
+
+
+@login_required
+def group_dashboard(request):
+    if request.user.grupo is None:
+        return redirect("dashboard")
+
+    hospitais_permitidos = set(
+        Hospital.objects.filter(
+            grupo=request.user.grupo
+        ).values_list("nome", flat=True)
+    )
+
+    hospitals = []
+
+    for redis_key in ("Central", "Usina"):
+        redis_data = r.hgetall(redis_key)
+        print(redis_data)
+
+        for hospital_nome, dados in redis_data.items():
+            if hospital_nome not in hospitais_permitidos:
+                continue
+
+            try:
+                detalhes = json.loads(dados)
+                detalhes["hospital"] = hospital_nome
+                hospitals.append(detalhes)
+                print(detalhes)
+            except Exception as e:
+                print(e)
+    print(hospitals)
+    return render(
+        request,
+        "dashboard/admin_dashboard.html",
+        {
+            "hospitals": hospitals,
+            "grupo": request.user.grupo,
+        },
+    )
+
 @login_required
 def dashboard(request):
     hospital = request.user.hospital
+
+    if request.user.hospital_groups.exists():
+        print('redirect grupo')
+        return redirect("group_dashboard")
 
     if hospital.nome == 'CRADMIN':
         return redirect('admin_dashboard')
     
     if hospital.nome == 'Tecnico':
         return redirect('relatorio')
+    
     
     keys = ["Central", "Usina"]
 
@@ -119,14 +166,30 @@ def faults_admin_view(request):
 
 @login_required
 def get_all_data(request):
-    usinas = r.hgetall('Usina')
-    centrais = r.hgetall('Central')
 
-    usinas = {k: json.loads(v) for k, v in usinas.items()} #type: ignore
-    centrais = {k: json.loads(v) for k, v in centrais.items()} #type: ignore
+    if request.user.is_superuser:
+        hospitais = None
+    elif request.user.grupo:
+        hospitais = set(
+            Hospital.objects.filter(
+                grupo=request.user.grupo
+            ).values_list("nome", flat=True)
+        )
+    else:
+        hospitais = {request.user.hospital.nome}
 
-    data = {
-        "locais": {**usinas, **centrais}
-    }
+    locais = {}
 
-    return JsonResponse(data)
+    for redis_key in ("Central", "Usina"):
+        redis_data = r.hgetall(redis_key)
+
+        for nome, dados in redis_data.items():
+
+            if hospitais is not None and nome not in hospitais:
+                continue
+
+            locais[nome] = json.loads(dados)
+
+    return JsonResponse({
+        "locais": locais
+    })
