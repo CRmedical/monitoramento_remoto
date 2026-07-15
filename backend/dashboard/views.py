@@ -32,7 +32,7 @@ def processar_redis(hospitais_permitidos=None):
     for redis_key in ("Central", "Usina"):
         redis_data = r.hgetall(redis_key)
 
-        for hospital_nome, dados in redis_data.items():
+        for hospital_nome, dados in redis_data.items(): #type: ignore
 
             if hospitais_permitidos is not None and hospital_nome not in hospitais_permitidos:
                 continue
@@ -124,7 +124,7 @@ def dashboard(request):
         data = r.hget(key, hospital.nome)
 
         if data:
-            hospital_details = json.loads(data)
+            hospital_details = json.loads(data) #type: ignore
 
             if "accumulated" in hospital_details:
                 try:
@@ -146,6 +146,15 @@ def dashboard(request):
                     "hospital_details": hospital_details,
                 },
             )
+        # caso não encontre dados no Redis
+    return render(
+        request,
+        "dashboard/hospital_404.html",
+        {
+            "hospital": hospital.nome,
+            "error": "Detalhes do hospital não encontrados no Redis"
+        }
+    )
 
 
 @login_required

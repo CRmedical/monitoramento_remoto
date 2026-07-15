@@ -52,7 +52,7 @@ function openModal(index) {
     
     setOptional('cardVacuo',           'mVacuo',           d.vacuo);
     setOptional('cardProductPressure', 'mProductPressure', d.product_pressure);
-    setOptional('cardPurity',          'mPurity',          d.purity);
+    setOptional('cardPurity',          'mPurity',          d.purity != null ? Number(d.purity).toFixed(2) : null);
     setOptional('cardRede', 'mRede', d.rede);
     setOptional('cardAcumulado', 'mAcumulado', d.accumulated);
     // setOptional('cardVazao', 'mVazao', d.flow);
