@@ -78,24 +78,54 @@ function renderCards(locais) {
     const container = document.getElementById('hospitalCards');
     if (!container) return;
 
-    // Normaliza para array preservando a key (nome do local)
     hospitalsIndex = Object.entries(locais).map(([key, val]) => ({ key, ...val }));
 
     container.innerHTML = '';
 
     hospitalsIndex.forEach((data, index) => {
+
+        let extras = '';
+
+        if (data.pressure != null) {
+            extras += `
+                <div class="card-info">
+                    <span class="label">Pressão</span>
+                    <span class="value">${Number(data.pressure).toFixed(2)} <small>bar</small></span>
+                </div>
+            `;
+        }
+
+        if (data.accumulated != null) {
+            extras += `
+                <div class="card-info">
+                    <span class="label">Acumulado</span>
+                    <span class="value">${Number(data.accumulated).toFixed(2)} <small>m³</small></span>
+                </div>
+            `;
+        }
+
+        if (data.purity != null) {
+            extras += `
+                <div class="card-info">
+                    <span class="label">Pureza</span>
+                    <span class="value">${Number(data.purity).toFixed(2)} <small>%</small></span>
+                </div>
+            `;
+        }
+
         const card = document.createElement('a');
         card.className = 'hospital_card';
-        card.setAttribute('data-index', index);
+        card.dataset.index = index;
         card.addEventListener('click', () => openModal(index));
 
         card.innerHTML = `
             <div class="hospital_name">${data.hospital ?? data.key}</div>
-            <div class="hospital_pressure">
-                ${data.pressure ?? '—'}
-                <span>bar</span>
+
+            <div class="hospital_metrics">
+                ${extras}
             </div>
         `;
+
         container.appendChild(card);
     });
 }
