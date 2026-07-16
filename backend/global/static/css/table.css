@@ -82,3 +82,29 @@ td {
         font-size: 13px;
     }
 }
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+.pagination a {
+    padding: 8px 14px;
+    border-radius: 6px;
+    background: #1976d2;
+    color: #fff;
+    text-decoration: none;
+    transition: .2s;
+}
+
+.pagination a:hover {
+    background: #1565c0;
+}
+
+.pagination span {
+    font-weight: bold;
+}

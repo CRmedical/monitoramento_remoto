@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from .models import Fault, Hospital, HospitalGroup
+from django.core.paginator import Paginator
 
 import os
 from dotenv import load_dotenv
@@ -152,21 +153,27 @@ def hospital_data(request):
 
 @login_required
 def faults_admin_view(request):
-    hospital = request.GET.get('hospital')
+    hospital = request.GET.get("hospital")
+    page = request.GET.get("page", 1)
 
-    faults = Fault.objects.all()
+    faults = Fault.objects.select_related("hospital")
 
     if hospital:
         faults = faults.filter(hospital__nome__icontains=hospital)
 
-    faults = faults.order_by('-criado_em')
-    context = {
-        'faults': faults
-    }
+    faults = faults.order_by("-criado_em")
+
+    paginator = Paginator(faults, 50)  # 50 registros por página
+    page_obj = paginator.get_page(page)
 
     return render(
-        request, 'dashboard/faults.html',
-        context
+        request,
+        "dashboard/faults.html",
+        {
+            "page_obj": page_obj,
+            "faults": page_obj.object_list,
+            "hospital": hospital,
+        },
     )
 
 @login_required
