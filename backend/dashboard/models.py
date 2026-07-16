@@ -33,6 +33,51 @@ class Hospital(models.Model):
                                                 verbose_name="Multiplicador do acumulado"
                                                 )
 
+    multiplicador_pressao = models.DecimalField(
+        max_digits=8,
+        decimal_places=3,
+        default=Decimal("1.000"),
+        verbose_name="Multiplicador da pressão"
+    )
+
+    multiplicador_pressao_produto = models.DecimalField(
+        max_digits=8,
+        decimal_places=3,
+        default=Decimal("1.000"),
+        verbose_name="Multiplicador da pressão do produto"
+    )
+
+    multiplicador_pureza = models.DecimalField(
+        max_digits=8,
+        decimal_places=3,
+        default=Decimal("1.000"),
+        verbose_name="Multiplicador da pureza"
+    )
+
+    offset_pressao = models.DecimalField(
+    max_digits=8,
+    decimal_places=2,
+    default=Decimal("0.00")
+    )
+
+    offset_pressao_produto = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        default=Decimal("0.00")
+    )
+
+    offset_pureza = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        default=Decimal("0.00")
+    )
+
+    offset_acumulado = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        default=Decimal("0.00")
+    )
+
     def __str__(self):
         return self.nome
 

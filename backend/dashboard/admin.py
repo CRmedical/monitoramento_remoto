@@ -10,13 +10,8 @@ class HospitalAdmin(admin.ModelAdmin):
         "multiplicador_acumulado",
     )
 
-    search_fields = (
-        "nome",
-    )
-
-    list_filter = (
-        "grupo",
-    )
+    search_fields = ("nome",)
+    list_filter = ("grupo",)
 
     fieldsets = (
         (
@@ -29,11 +24,39 @@ class HospitalAdmin(admin.ModelAdmin):
             },
         ),
         (
-            "Configuração da Telemetria",
+            "Fluxo Acumulado",
             {
                 "fields": (
                     "multiplicador_acumulado",
-                ),
+                    "offset_acumulado",
+                )
+            },
+        ),
+        (
+            "Pressão da Rede",
+            {
+                "fields": (
+                    "multiplicador_pressao",
+                    "offset_pressao",
+                )
+            },
+        ),
+        (
+            "Pressão do Produto",
+            {
+                "fields": (
+                    "multiplicador_pressao_produto",
+                    "offset_pressao_produto",
+                )
+            },
+        ),
+        (
+            "Pureza",
+            {
+                "fields": (
+                    "multiplicador_pureza",
+                    "offset_pureza",
+                )
             },
         ),
     )

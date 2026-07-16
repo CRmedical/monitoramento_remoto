@@ -16,14 +16,9 @@ r = redis.Redis(host=redis_host, port=6379, db=0, password=redis_password, decod
 
 
 def processar_redis(hospitais_permitidos=None):
-    """
-    hospitais_permitidos:
-        None -> retorna todos
-        set() -> retorna apenas os hospitais do conjunto
-    """
 
-    multiplicadores = {
-        h.nome: h.multiplicador_acumulado
+    hospitais_db = {
+        h.nome: h
         for h in Hospital.objects.all()
     }
 
@@ -40,21 +35,48 @@ def processar_redis(hospitais_permitidos=None):
             try:
                 detalhes = json.loads(dados)
 
-                if "accumulated" in detalhes:
-                    try:
-                        fator = float(multiplicadores.get(hospital_nome, 1.0))
-                        detalhes["accumulated"] = round(
-                            float(detalhes["accumulated"]) * fator,
-                            2
-                        )
-                        print(
-                            hospital_nome,
-                            detalhes.get("accumulated"),
-                            fator
-                        )
-                    except (TypeError, ValueError):
-                        print('erro')
-                        pass
+                hospital = hospitais_db.get(hospital_nome)
+
+                if hospital:
+
+                    calibracoes = {
+                        "accumulated": (
+                            hospital.multiplicador_acumulado,
+                            hospital.offset_acumulado,
+                            2,
+                        ),
+                        "pressure": (
+                            hospital.multiplicador_pressao,
+                            hospital.offset_pressao,
+                            2,
+                        ),
+                        "product_pressure": (
+                            hospital.multiplicador_pressao_produto,
+                            hospital.offset_pressao_produto,
+                            2,
+                        ),
+                        "purity": (
+                            hospital.multiplicador_pureza,
+                            hospital.offset_pureza,
+                            2,
+                        ),
+                    }
+
+                    for campo, (mult, offset, casas) in calibracoes.items():
+
+                        if campo not in detalhes:
+                            continue
+
+                        try:
+                            valor = float(detalhes[campo])
+
+                            detalhes[campo] = round(
+                                valor * float(mult) + float(offset),
+                                casas,
+                            )
+
+                        except (TypeError, ValueError):
+                            pass
 
                 detalhes["hospital"] = hospital_nome
                 hospitais.append(detalhes)
