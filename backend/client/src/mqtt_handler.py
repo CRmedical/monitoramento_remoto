@@ -6,6 +6,10 @@ import paho.mqtt.client as mqtt
 from src.django_handler import sync_hospital
 from .alert_manager import AlertPipeline, ConnectionAlertPipeline
 
+from dashboard.models import Hospital
+
+
+
 logger = logging.getLogger(__name__)
 alert = AlertPipeline()
 
@@ -22,6 +26,8 @@ class MqttHandler:
     redis_db: int = 0
     redis_password: str | None = None
 
+    
+
     def __init__(self, broker: str, port: int, username: str, password: str, topic: str) -> None:
         self.broker = broker
         self.port = port
@@ -29,6 +35,8 @@ class MqttHandler:
         self.password = password
         self.topic = topic
     
+        self.load_calibracoes()
+
     def set_redis_connection(self, host: str, port: int, db: int, password: str | None = None) -> None:
         """Configura a conexão com o Redis."""
         self.redis_host = host
@@ -68,6 +76,14 @@ class MqttHandler:
                 
             else:
                 data = json.loads(msg.payload.decode())
+                
+                hospital = data["Hospital"]
+
+                data["Data"] = self.calibrar(
+                    hospital,
+                    data["Data"]
+                )
+
                 self._process_database_data(data)
                 self._process_alert_notification(data)
 
@@ -75,6 +91,51 @@ class MqttHandler:
             logger.error(f"Erro ao decodificar JSON: {e}")
         except Exception as e:
             logger.error(f"Erro ao processar mensagem MQTT: {e}")
+
+    
+    def load_calibracoes(self):
+        self.calibracoes = {}
+
+        for h in Hospital.objects.all():
+            self.calibracoes[h.nome] = {
+                "pressure": (
+                    float(h.multiplicador_pressao),
+                    float(h.offset_pressao),
+                ),
+                "product_pressure": (
+                    float(h.multiplicador_pressao_produto),
+                    float(h.offset_pressao_produto),
+                ),
+                "purity": (
+                    float(h.multiplicador_pureza),
+                    float(h.offset_pureza),
+                ),
+                "accumulated": (
+                    float(h.multiplicador_acumulado),
+                    float(h.offset_acumulado),
+                ),
+            }
+    def calibrar(self, hospital_nome, dados):
+
+        cfg = self.calibracoes.get(hospital_nome)
+
+        if not cfg:
+            return dados
+
+        for campo, (mult, offset) in cfg.items():
+
+            if campo not in dados:
+                continue
+
+            try:
+                dados[campo] = round(
+                    float(dados[campo]) * mult + offset,
+                    2
+                )
+            except (TypeError, ValueError):
+                pass
+
+        return dados
 
     def _process_database_data(self, data_clients):
         """Processa os dados para o banco de dados."""
@@ -143,3 +204,5 @@ class MqttHandler:
 
         client.connect(self.broker, self.port, 60)
         client.loop_forever()
+
+

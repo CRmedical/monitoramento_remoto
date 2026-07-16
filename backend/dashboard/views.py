@@ -15,12 +15,14 @@ redis_password = os.getenv('REDIS_PASSWORD')
 r = redis.Redis(host=redis_host, port=6379, db=0, password=redis_password, decode_responses=True)
 
 
-def processar_redis(hospitais_permitidos=None):
+def obter_hospitais_redis(hospitais_permitidos=None):
+    """
+    Lê os hospitais do Redis.
 
-    hospitais_db = {
-        h.nome: h
-        for h in Hospital.objects.all()
-    }
+    hospitais_permitidos:
+        None -> retorna todos
+        set() -> retorna apenas os hospitais informados
+    """
 
     hospitais = []
 
@@ -34,50 +36,6 @@ def processar_redis(hospitais_permitidos=None):
 
             try:
                 detalhes = json.loads(dados)
-
-                hospital = hospitais_db.get(hospital_nome)
-
-                if hospital:
-
-                    calibracoes = {
-                        "accumulated": (
-                            hospital.multiplicador_acumulado,
-                            hospital.offset_acumulado,
-                            2,
-                        ),
-                        "pressure": (
-                            hospital.multiplicador_pressao,
-                            hospital.offset_pressao,
-                            2,
-                        ),
-                        "product_pressure": (
-                            hospital.multiplicador_pressao_produto,
-                            hospital.offset_pressao_produto,
-                            2,
-                        ),
-                        "purity": (
-                            hospital.multiplicador_pureza,
-                            hospital.offset_pureza,
-                            2,
-                        ),
-                    }
-
-                    for campo, (mult, offset, casas) in calibracoes.items():
-
-                        if campo not in detalhes:
-                            continue
-
-                        try:
-                            valor = float(detalhes[campo])
-
-                            detalhes[campo] = round(
-                                valor * float(mult) + float(offset),
-                                casas,
-                            )
-
-                        except (TypeError, ValueError):
-                            pass
-
                 detalhes["hospital"] = hospital_nome
                 hospitais.append(detalhes)
 
@@ -85,7 +43,6 @@ def processar_redis(hospitais_permitidos=None):
                 print(e)
 
     return hospitais
-
 
 @login_required
 def admin_dashboard(request):
@@ -97,7 +54,7 @@ def admin_dashboard(request):
         request,
         "dashboard/admin_dashboard.html",
         {
-            "hospitals": processar_redis()
+            "hospitals": obter_hospitais_redis()
         }
     )
 
@@ -120,7 +77,7 @@ def group_dashboard(request):
         request,
         "dashboard/admin_dashboard.html",
         {
-            "hospitals": processar_redis(hospitais_permitidos),
+            "hospitals": obter_hospitais_redis(hospitais_permitidos),
             "grupo": request.user.grupo,
         }
     )
@@ -228,7 +185,7 @@ def get_all_data(request):
     else:
         hospitais_permitidos = {request.user.hospital.nome}
 
-    hospitais = processar_redis(hospitais_permitidos)
+    hospitais = obter_hospitais_redis(hospitais_permitidos)
 
     locais = {}
 
