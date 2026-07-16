@@ -51,6 +51,9 @@ def admin_dashboard(request):
     if not request.user.is_superuser:
         return redirect("dashboard")
 
+    # Não está visualizando nenhum grupo específico
+    request.session.pop("grupo_visualizado", None)
+
     return render(
         request,
         "dashboard/admin_dashboard.html",
@@ -58,8 +61,6 @@ def admin_dashboard(request):
             "hospitals": obter_hospitais_redis()
         }
     )
-
-
 
 
 @login_required
@@ -176,20 +177,61 @@ def faults_admin_view(request):
         },
     )
 
+
+from django.shortcuts import get_object_or_404
+
+@login_required
+def group_dashboard_admin(request, grupo_id):
+
+    if not request.user.is_superuser:
+        return redirect("dashboard")
+
+    grupo = get_object_or_404(HospitalGroup, pk=grupo_id)
+
+    # Salva o grupo que está sendo visualizado
+    request.session["grupo_visualizado"] = grupo.id #type: ignore
+
+    nomes = set(
+        Hospital.objects.filter(grupo=grupo)
+        .values_list("nome", flat=True)
+    )
+
+    return render(
+        request,
+        "dashboard/admin_dashboard.html",
+        {
+            "hospitals": obter_hospitais_redis(nomes),
+            "grupo": grupo,
+        },
+    )
+
 @login_required
 def get_all_data(request):
 
-    if request.user.is_superuser:
-        hospitais_permitidos = None
+    hospitais_permitidos = None
 
+    # Administrador visualizando um grupo
+    if request.user.is_superuser:
+
+        grupo_id = request.session.get("grupo_visualizado")
+
+        if grupo_id:
+            hospitais_permitidos = set(
+                Hospital.objects.filter(grupo_id=grupo_id)
+                .values_list("nome", flat=True)
+            )
+
+    # Usuário comum com grupo
     elif request.user.grupo:
+
         hospitais_permitidos = set(
-            Hospital.objects.filter(
-                grupo=request.user.grupo
-            ).values_list("nome", flat=True)
+            Hospital.objects.filter(grupo=request.user.grupo)
+            .values_list("nome", flat=True)
         )
 
+    # Usuário de um único hospital
     else:
+
         hospitais_permitidos = {request.user.hospital.nome}
 
     hospitais = obter_hospitais_redis(hospitais_permitidos)

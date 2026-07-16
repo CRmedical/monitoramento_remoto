@@ -5,12 +5,34 @@
 <link rel="stylesheet" href="{% static "css/search_bar.css" %}">
 
 <nav class="navbar">
-    <a href="{% url "admin_dashboard" %}">Home</a>
+    <a href="{% url 'admin_dashboard' %}">Home</a>
+
     <a href="{% url 'faults' %}">Falhas</a>
+
     <a href="{% url 'admin:index' %}">Admin</a>
-    
+
+    <div class="dropdown">
+        <button class="dropbtn">
+            Grupos ▼
+        </button>
+
+        <div class="dropdown-content">
+            {% for grupo in hospital_groups %}
+                <a href="{% url 'group_dashboard_admin' grupo.id %}">
+                    {{ grupo.nome }}
+                </a>
+            {% empty %}
+                <span>Nenhum grupo</span>
+            {% endfor %}
+        </div>
+    </div>
+
     <form method="GET">
-        <input type="search" name="hospital" placeholder="Buscar hospital..." value="{{ request.GET.hospital }}">
+        <input
+            type="search"
+            name="hospital"
+            placeholder="Buscar hospital..."
+            value="{{ request.GET.hospital }}"
+        >
     </form>
-       
 </nav>
