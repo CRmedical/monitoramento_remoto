@@ -7,22 +7,22 @@ class ProcessData:
 
 
     USINA_RULES = [
-        ("purity",            operator.lt,  90.0,  "Low purity: {value}%"),
-        ("product_pressure",  operator.lt,   5.0,  "Low product pressure: {value}"),
-        ("pressure",          operator.lt,   7.2,  "Low central pressure: {value}"),
-        ("dew_point",         operator.gt, 5.0,  "High dew point: {value}"),
-        ("line",              operator.lt,   5.0,  "Low line pressure: {value}"),
+        ("purity",            operator.lt,  90.0,  "Baixa Pureza: {value}%"),
+        ("product_pressure",  operator.lt,   6.0,  "Baixa pressão do Produto: {value}"),
+        ("pressure",          operator.lt,   6.8,  "Baixa Pressão da central: {value}"),
+        ("dew_point",         operator.gt, 5.0,  "Ponto de orvalho Alto: {value}"),
+        ("line",              operator.lt,   6.0,  "Baixa pressão de Rede: {value}"),
     ]
 
     FLAG_RULES = [
-        ("phase_fault", operator.ne, "OK", "RST failure detected"),
-        ("emergency_btn",  operator.ne, "OK", "Emergency button activated"),
+        ("phase_fault", operator.ne, "OK", "Falta de Fase Detectada"),
+        ("emergency_btn",  operator.ne, "OK", "Botão de Emergência"),
     ]
 
     HOSPITAL_RULES = [
-        ("pressure", operator.lt, 7.2, "Low pressure: {value}"),
-        ("line",     operator.lt, 5.0, "Low line pressure: {value}"),
-        ("dew_point", operator.gt, 5.0, "High dew point: {value}"),
+        ("pressure", operator.lt, 6.8, "Baixa Pressão da central: {value}"),
+        ("line",     operator.lt, 6.0, "Baixa pressão de Rede: {value}"),
+        ("dew_point", operator.gt, 5.0, "Ponto de orvalho Alto: {value}"),
     ]
 
 
@@ -136,8 +136,8 @@ class Handles:
     def create_message(cls, fault: Fault):
       
         return  (
-            f'ALERT: Issues detected in {fault.source} {fault.hospital}\n\n'
-            f'Identified issues:\n' 
+            f'ALERTA: Falha Detectada Em {fault.source} {fault.hospital}\n\n'
+            f'Identificação Da Falha:\n' 
             f'{fault.message}'
         )
     
@@ -145,8 +145,8 @@ class Handles:
     def create_recover_message(cls, fault: Fault):
       
         return  (
-            f'ALERT: Issues recovered in {fault.source} {fault.hospital}\n\n'
-            f'Identified solved:\n' 
+            f'ALERTA: Falta Resetada Pelo Sistema {fault.source} {fault.hospital}\n\n'
+            f'Identificação Da Falha:\n' 
             f'{fault.message}'
         )
 
@@ -155,7 +155,7 @@ class Handles:
     def create_connection_message(cls, connection: Connection) -> str:
     
         return (
-            f'CONNECTION ALERT: \n'
+            f'ALERTA DE CONEXÂO: \n'
             f'Hospital: {connection.hospital} \n'
             f'Status: {connection.status}'
         )
