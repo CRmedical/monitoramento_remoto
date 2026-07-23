@@ -48,7 +48,7 @@ function openModal(index) {
     setFlag('flagAuto', 'valAuto', d.auto);
     
     document.getElementById('mPressure').textContent = d.pressure  ?? '—';
-    document.getElementById('mDewPoint').textContent = d.dew_point ?? '—';
+    // document.getElementById('mDewPoint').textContent = d.dew_point ?? '—';
     
     setOptional('cardVacuo',           'mVacuo',           d.vacuo);
     setOptional('cardProductPressure', 'mProductPressure', d.product_pressure);
