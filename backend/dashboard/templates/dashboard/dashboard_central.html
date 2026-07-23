@@ -56,13 +56,13 @@
                     </div>
                     {% endif %}
 
-                    {% if hospital_details.dew_point %}
+                    {% comment %} {% if hospital_details.dew_point %}
                     <div class="gauge-card">
                         <h3><i class="fas fa-tint"></i> Ponto de Orvalho</h3>
                         <canvas id="dew-gauge" width="250" height="250"></canvas>
                         <div class="gauge-label">°C</div>
                     </div>
-                    {% endif %}
+                    {% endif %} {% endcomment %}
 
                     {% if hospital_details.vacuo %}
                     <div class="gauge-card">
