@@ -7,11 +7,11 @@ class ProcessData:
 
 
     USINA_RULES = [
-        ("purity",            operator.lt,  90.0,  "Baixa Pureza: {value}%"),
-        ("product_pressure",  operator.lt,   6.0,  "Baixa pressão do Produto: {value}"),
+        ("purity",            operator.lt,  88.0,  "Baixa Pureza: {value}%"),
+        ("product_pressure",  operator.lt,   5.0,  "Baixa pressão do Produto: {value}"),
         ("pressure",          operator.lt,   6.8,  "Baixa Pressão da central: {value}"),
         ("dew_point",         operator.gt, 50.0,  "Ponto de orvalho Alto: {value}"),
-        ("line",              operator.lt,   6.0,  "Baixa pressão de Rede: {value}"),
+        ("line",              operator.lt,   5.0,  "Baixa pressão de Rede: {value}"),
     ]
 
     FLAG_RULES = [
@@ -21,8 +21,10 @@ class ProcessData:
 
     HOSPITAL_RULES = [
         ("pressure", operator.lt, 6.8, "Baixa Pressão da central: {value}"),
-        ("line",     operator.lt, 6.0, "Baixa pressão de Rede: {value}"),
+        ("line",     operator.lt, 5.0, "Baixa pressão de Rede: {value}"),
         ("dew_point", operator.gt, 50.0, "Ponto de orvalho Alto: {value}"),
+        ("purity",            operator.lt,  88.0,  "Baixa Pureza: {value}%"),
+        ("product_pressure",  operator.lt,   5.0,  "Baixa pressão do Produto: {value}"),
     ]
 
 
