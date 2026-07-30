@@ -54,3 +54,33 @@
     text-decoration: none;
     color: inherit;
 }
+/* Card em alarme */
+.card-alarm {
+    background: linear-gradient(
+        135deg,
+        rgba(255, 70, 70, 0.10),
+        rgba(255, 70, 70, 0.04)
+    ) !important;
+
+    border: 1px solid rgba(255, 70, 70, 0.35);
+    transition: .3s;
+}
+
+/* Destaque do parâmetro em alarme */
+.param-alarm {
+    background: rgba(255, 0, 0, 0.12);
+    border-left: 4px solid #ff3b3b;
+    border-radius: 6px;
+    padding: 6px 8px;
+}
+
+/* Deixa o texto mais evidente */
+.param-alarm .label {
+    color: #ff5a5a;
+    font-weight: 600;
+}
+
+.param-alarm .value {
+    color: #ff2d2d;
+    font-weight: 700;
+}
