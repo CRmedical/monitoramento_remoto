@@ -89,7 +89,6 @@ def dashboard(request):
     hospital = request.user.hospital
 
     if request.user.hospital_groups.exists():
-        print('redirect grupo')
         return redirect("group_dashboard")
 
     if hospital.nome == 'CRADMIN':

@@ -13,6 +13,7 @@ class Data:
     dew_point: float | None
     vaccum: str | None
     purity: float | None
+    product_pressure: float | None
     
     @classmethod
     def from_dict(cls, payload: dict) -> "Data":
@@ -27,6 +28,7 @@ class Data:
             dew_point=payload.get("dew_point"),
             vaccum=payload.get("vacuo"),
             purity=payload.get("purity"),
+            product_pressure=payload.get('product_pressure',)
         )
 
 @dataclass
