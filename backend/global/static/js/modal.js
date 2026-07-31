@@ -86,11 +86,34 @@ function renderCards(locais) {
 
         let extras = '';
 
+        const pressureAlarm =
+            data.pressure != null && Number(data.pressure) < 6.5;
+
+        const productPressureAlarm =
+            data.product_pressure != null && Number(data.product_pressure) < 5.0;
+
+        const purityAlarm =
+            data.purity != null && Number(data.purity) < 88;
+
+        const hasAlarm =
+            pressureAlarm ||
+            productPressureAlarm ||
+            purityAlarm;
+
         if (data.pressure != null) {
             extras += `
-                <div class="card-info">
+                <div class="card-info ${IS_SUPERUSER && pressureAlarm ? 'param-alarm' : ''}">
                     <span class="label">Pressão</span>
                     <span class="value">${Number(data.pressure).toFixed(2)} <small>bar</small></span>
+                </div>
+            `;
+        }
+
+        if (data.product_pressure != null) {
+            extras += `
+                <div class="card-info ${IS_SUPERUSER && productPressureAlarm ? 'param-alarm' : ''}">
+                    <span class="label">Pressão Produto</span>
+                    <span class="value">${Number(data.product_pressure).toFixed(2)} <small>bar</small></span>
                 </div>
             `;
         }
@@ -106,7 +129,7 @@ function renderCards(locais) {
 
         if (data.purity != null) {
             extras += `
-                <div class="card-info">
+                <div class="card-info ${IS_SUPERUSER && purityAlarm ? 'param-alarm' : ''}">
                     <span class="label">Pureza</span>
                     <span class="value">${Number(data.purity).toFixed(2)} <small>%</small></span>
                 </div>
@@ -115,6 +138,10 @@ function renderCards(locais) {
 
         const card = document.createElement('a');
         card.className = 'hospital_card';
+
+        if (IS_SUPERUSER && hasAlarm) {
+            card.classList.add('card-alarm');
+        }
         card.dataset.index = index;
         card.addEventListener('click', () => openModal(index));
 
@@ -129,7 +156,6 @@ function renderCards(locais) {
         container.appendChild(card);
     });
 }
-
 // ─── Fetch & Polling ──────────────────────────────────────────────────────────
 async function fetchData() {
     try {

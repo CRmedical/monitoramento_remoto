@@ -23,6 +23,9 @@
 
 {% block extra_script %}
     <script>
+        const IS_SUPERUSER = {{ request.user.is_superuser|yesno:"true,false" }};
+    </script>
+    <script>
         window.ALL_DATA_URL = "{% url 'get_all_data' %}";
     </script>
     <script src="{% static 'js/modal.js' %}"></script>
