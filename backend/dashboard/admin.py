@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import AirCentral, OxygenCentral, Hospital, ChatTelegram, Fault, HospitalGroup
+from .models import AirCentral, OxygenCentral, Hospital, ChatTelegram, Fault, HospitalGroup, TelemetryHistory
 
 
 @admin.register(Hospital)
@@ -113,3 +113,35 @@ class HospitalGroupAdmin(admin.ModelAdmin):
     def total_usuarios(self, obj):
         return obj.usuarios.count()
     total_usuarios.short_description = "Usuários"
+
+@admin.register(TelemetryHistory)
+class TelemetryHistoryAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "hospital",
+        "timestamp",
+        "pressure",
+        "product_pressure",
+        "purity",
+        "flow",
+        "accumulated",
+    )
+
+    list_filter = (
+        "hospital",
+        "timestamp",
+    )
+
+    search_fields = (
+        "hospital__nome",
+    )
+
+    ordering = (
+        "-timestamp",
+    )
+
+    list_select_related = (
+        "hospital",
+    )
+
+    list_per_page = 100

@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% include "nav.html" %}
+
+<div class="telemetry-page">
+    <div class="telemetry-header">
+
+        <h1>Histórico de Telemetria</h1>
+
+        <div class="filters">
+
+          <div class="hospital-filter">
+
+            <label>Hospital</label>
+
+            <input
+                type="text"
+                id="hospitalSearch"
+                placeholder="Pesquisar hospital..."
+                autocomplete="off"
+            >
+
+            <select id="hospitalSelect">
+
+                <option value="">
+                    Selecione um hospital
+                </option>
+
+                {% for hospital in hospitals %}
+
+                <option value="{{ hospital.id }}">
+                    {{ hospital.nome }}
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+            <div>
+                <label>Período</label>
+
+                <select id="periodSelect">
+
+                    <option value="24h">
+                        Últimas 24 horas
+                    </option>
+
+                    <option value="7d">
+                        Últimos 7 dias
+                    </option>
+
+                    <option value="30d" selected>
+                        Últimos 30 dias
+                    </option>
+
+                </select>
+            </div>
+
+            <button id="loadHistory">
+                Atualizar
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="charts-grid">
+
+        <div class="chart-card">
+
+            <div class="chart-title">
+                Pressão
+            </div>
+
+            <canvas id="pressureChart"></canvas>
+
+        </div>
+
+
+        <div class="chart-card">
+
+            <div class="chart-title">
+                Pressão do Produto
+            </div>
+
+            <canvas id="productPressureChart"></canvas>
+
+        </div>
+        
+
+        <div class="chart-card">
+
+            <div class="chart-title">
+                Pureza
+            </div>
+
+            <canvas id="purityChart"></canvas>
+
+        </div>
+
+
+        <div class="chart-card">
+
+            <div class="chart-title">
+                Fluxo
+            </div>
+
+            <canvas id="flowChart"></canvas>
+
+        </div>
+
+        <div class="chart-card">
+
+            <div class="chart-title">
+                Acumulado
+            </div>
+
+            <canvas id="accumulatedChart"></canvas>
+        </div>
+
+        <div class="chart-card">
+
+            <div class="chart-title">
+                Ponto de Orvalho
+            </div>
+
+            <canvas id="dewPointChart"></canvas>
+
+        </div>
+
+        <div class="chart-card chart-card-wide">
+
+            <div class="chart-title">
+                Pureza × Pressão do Produto
+            </div>
+
+            <canvas id="purityProductPressureChart"></canvas>
+        </div>
+
+    </div>
+
+    <script>
+        const TELEMETRY_HISTORY_URL =
+            "{% url 'telemetry_history' %}";
+    </script>
+    
+    <script src="{% static 'js/telemetry_history.js' %}"></script>
+</div>
+
+{% endblock content %}
+

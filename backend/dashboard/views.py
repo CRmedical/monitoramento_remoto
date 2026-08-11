@@ -6,6 +6,10 @@ from django.http import JsonResponse
 from .models import Fault, Hospital, HospitalGroup
 from django.core.paginator import Paginator
 
+from datetime import timedelta
+from django.utils import timezone
+from .models import TelemetryHistory
+
 import os
 from dotenv import load_dotenv
 
@@ -244,3 +248,123 @@ def get_all_data(request):
     return JsonResponse({
         "locais": locais
     })
+
+@login_required
+def telemetry_history(request):
+
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {
+                "error": "Acesso permitido somente para superusuários."
+            },
+            status=403
+        )
+
+    hospital_id = request.GET.get("hospital")
+    start = request.GET.get("start")
+    end = request.GET.get("end")
+
+    if not hospital_id:
+        return JsonResponse(
+            {
+                "error": "Hospital não informado."
+            },
+            status=400
+        )
+
+    hospital = get_object_or_404(
+        Hospital,
+        id=hospital_id
+    )
+
+    queryset = TelemetryHistory.objects.filter(
+        hospital=hospital
+    )
+
+    # --------------------------------------------------
+    # Período
+    # --------------------------------------------------
+
+    if start and end:
+
+        try:
+
+            from django.utils.dateparse import parse_datetime
+
+            start_date = parse_datetime(start)
+            end_date = parse_datetime(end)
+
+            if start_date and end_date:
+
+                queryset = queryset.filter(
+                    timestamp__gte=start_date,
+                    timestamp__lte=end_date
+                )
+
+        except Exception:
+
+            return JsonResponse(
+                {
+                    "error": "Período inválido."
+                },
+                status=400
+            )
+
+    else:
+
+        # Padrão: últimos 30 dias
+        inicio = timezone.now() - timedelta(days=30)
+
+        queryset = queryset.filter(
+            timestamp__gte=inicio
+        )
+
+    queryset = queryset.order_by("timestamp")
+
+    dados = []
+
+    for item in queryset:
+
+        dados.append(
+            {
+                "timestamp": item.timestamp.isoformat(),
+
+                "pressure": item.pressure,
+
+                "product_pressure":
+                    item.product_pressure,
+
+                "purity":
+                    item.purity,
+
+                "flow":
+                    item.flow,
+
+                "accumulated":
+                    item.accumulated,
+            }
+        )
+
+    return JsonResponse(
+        {
+            "hospital": hospital.nome,
+            "hospital_id": hospital.id,#type: ignore
+            "data": dados,
+        }
+    )
+
+@login_required
+def telemetry_history_page(request):
+
+    if not request.user.is_superuser:
+        return redirect("dashboard")
+
+    hospitals = Hospital.objects.all().order_by("nome")
+
+    return render(
+        request,
+        "dashboard/telemetry_history.html",
+        {
+            "hospitals": hospitals,
+        }
+    )

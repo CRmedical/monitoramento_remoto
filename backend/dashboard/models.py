@@ -99,3 +99,40 @@ class Fault(models.Model):
     falha = models.CharField(max_length=100)
     dados = models.CharField(max_length=200)
 
+
+class TelemetryHistory(models.Model):
+    hospital = models.ForeignKey(
+        Hospital,
+        on_delete=models.CASCADE,
+        related_name="historico_telemetria"
+    )
+
+    timestamp = models.DateTimeField(db_index=True)
+
+    pressure = models.FloatField(null=True, blank=True)
+    product_pressure = models.FloatField(null=True, blank=True)
+    purity = models.FloatField(null=True, blank=True)
+    flow = models.FloatField(null=True, blank=True)
+    accumulated = models.FloatField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["timestamp"]
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=["hospital", "timestamp"],
+                name="unique_hospital_telemetry_timestamp"
+            )
+        ]
+
+        indexes = [
+            models.Index(
+                fields=["hospital", "-timestamp"]
+            ),
+            models.Index(
+                fields=["timestamp"]
+            ),
+        ]
+
+    def __str__(self):
+        return f"{self.hospital.nome} - {self.timestamp}"

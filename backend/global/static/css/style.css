@@ -102,3 +102,117 @@ footer {
     border-radius: 10px;
 }
 
+
+
+/* telemetria */
+
+.telemetry-page {
+    padding: 20px;
+}
+
+.telemetry-header {
+    margin-bottom: 20px;
+}
+
+.telemetry-header h1 {
+    margin-bottom: 20px;
+}
+
+.filters {
+    display: flex;
+    gap: 15px;
+    align-items: end;
+    flex-wrap: wrap;
+}
+
+.filters div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.filters label {
+    font-size: 13px;
+}
+
+.filters select {
+    min-width: 220px;
+    padding: 9px 12px;
+}
+
+.filters button {
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(
+        2,
+        minmax(0, 1fr)
+    );
+
+    gap: 20px;
+}
+
+.chart-card {
+    min-height: 350px;
+
+    padding: 20px;
+
+    border-radius: 12px;
+
+    background: var(--card-bg, #1c222b);
+
+    border: 1px solid
+        var(--border-color, #2b323d);
+}
+
+.chart-title {
+    font-size: 18px;
+    font-weight: 600;
+
+    margin-bottom: 15px;
+    color: white;
+}
+
+.chart-card canvas {
+    width: 100% !important;
+    height: 280px !important;
+}
+
+.chart-card-wide {
+    grid-column: 1 / -1;
+}
+
+.hospital-filter {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.hospital-filter input {
+    width: 100%;
+    padding: 9px 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: #bfc1c4;
+    color: inherit;
+    outline: none;
+}
+
+.hospital-filter input:focus {
+    border-color: #2f8fd6;
+}
+
+.hospital-filter input::placeholder {
+    opacity: 0.6;
+}
+
+@media (max-width: 1000px) {
+
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+
+}

@@ -10,4 +10,6 @@ urlpatterns = [
     path('api/hospital-data/', views.hospital_data, name='hospital_data'),
     path('faults/', views.faults_admin_view, name='faults'),
     path('api/all-data/', views.get_all_data, name='get_all_data'),
+    path("api/telemetry-history/", views.telemetry_history, name="telemetry_history"),
+    path("telemetry-history/", views.telemetry_history_page, name="telemetry_history_page"),
 ]
