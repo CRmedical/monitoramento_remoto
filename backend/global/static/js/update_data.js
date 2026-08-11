@@ -22,7 +22,7 @@ async function updateData() {
             createOrUpdateGauge('product-gauge', data.product_pressure, 12, 0, '', [
                 { min: 0, max: 3, color: '#ff4444' },
                 { min: 3, max: 4, color: '#ffaa00' },
-                { min: 6, max: 12, color: '#00cc44' }
+                { min: 5, max: 12, color: '#00cc44' }
             ]);
         }
 
