@@ -19,7 +19,7 @@ do
     echo ""
     echo "[$AGORA] Serviço de consumo mensal ativo."
 
-    python backend/manage.py calcular_consumo_mensal
+    python backend/manage.py monthly_consumption
 
     echo "==> Aguardando 24 horas..."
 
