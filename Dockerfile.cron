@@ -5,6 +5,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     gcc \
     libpq-dev \
+    cron \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt /app/
@@ -13,8 +14,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app/
 
-COPY start_cron.sh /app/start_cron.sh
+# Executa o comando todo dia às 00:05
+RUN echo "5 0 * * * cd /app && python backend/manage.py monthly_consumption >> /var/log/consumo_mensal.log 2>&1" \
+    > /etc/cron.d/consumo-mensal
 
-RUN chmod +x /app/start_cron.sh
+RUN chmod 0644 /etc/cron.d/consumo-mensal \
+    && crontab /etc/cron.d/consumo-mensal
 
-CMD ["sh", "/app/start_cron.sh"]
+CMD ["cron", "-f"]
