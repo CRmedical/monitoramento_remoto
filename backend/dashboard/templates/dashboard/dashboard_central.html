@@ -75,7 +75,7 @@
                     {% endif %}
                 </div>
 
-                {% if hospital_details.accumulated %}
+                {% comment %} {% if hospital_details.accumulated %}
                     <div class="chart-card">
 
                         <div class="chart-title">
@@ -84,7 +84,7 @@
 
                         <canvas id="accumulatedChart"></canvas>
                     </div>
-                {% endif %}
+                {% endif %} {% endcomment %}
 
             </section>
 
@@ -143,9 +143,9 @@
 {% block extra_script %}
     <script>
         const HOSPITAL_DATA_URL = "{% url 'hospital_data' %}";
-        const ACCUMULATED_HISTORY_URL = "{% url 'accumulated_history' %}";
+        {% comment %} const ACCUMULATED_HISTORY_URL = "{% url 'accumulated_history' %}"; {% endcomment %}
     </script>
     <script src="{% static 'js/update_data.js' %}"></script>
     <script src="{% static 'js/create_update_gauge.js' %}"></script>
-    <script src="{% static 'js/accumulated_chart.js' %}"></script>
+    {% comment %} <script src="{% static 'js/accumulated_chart.js' %}"></script> {% endcomment %}
 {% endblock extra_script %}
