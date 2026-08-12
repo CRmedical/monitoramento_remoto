@@ -3,7 +3,7 @@ import json
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from .models import Fault, Hospital, HospitalGroup
+from .models import Fault, Hospital, HospitalGroup, MonthlyConsumption
 from django.core.paginator import Paginator
 
 from datetime import timedelta
@@ -390,6 +390,34 @@ def accumulated_history(request):
         dados.append({
             "timestamp": item.timestamp.isoformat(),
             "accumulated": item.accumulated,
+        })
+
+    return JsonResponse({
+        "hospital": hospital.nome,
+        "data": dados,
+    })
+
+
+
+@login_required
+def monthly_consumption(request):
+
+    hospital = request.user.hospital
+
+    consumptions = (
+        MonthlyConsumption.objects
+        .filter(hospital=hospital)
+        .order_by("-ano", "-mes")
+    )
+
+    dados = []
+
+    for item in consumptions:
+
+        dados.append({
+            "ano": item.ano,
+            "mes": item.mes,
+            "consumo": float(item.consumo),
         })
 
     return JsonResponse({

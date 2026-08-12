@@ -13,4 +13,5 @@ urlpatterns = [
     path("api/telemetry-history/", views.telemetry_history, name="telemetry_history"),
     path("telemetry-history/", views.telemetry_history_page, name="telemetry_history_page"),
     path("api/accumulated-history/", views.accumulated_history, name="accumulated_history"),
+    path("api/monthly-consumption/", views.monthly_consumption, name="monthly_consumption"),
 ]

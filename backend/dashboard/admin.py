@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import AirCentral, OxygenCentral, Hospital, ChatTelegram, Fault, HospitalGroup, TelemetryHistory
+from .models import Hospital, ChatTelegram, Fault, HospitalGroup, TelemetryHistory, MonthlyConsumption
 
 
 @admin.register(Hospital)
@@ -145,3 +145,56 @@ class TelemetryHistoryAdmin(admin.ModelAdmin):
     )
 
     list_per_page = 100
+
+@admin.register(MonthlyConsumption)
+class MonthlyConsumptionAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "hospital",
+        "periodo",
+        "consumo_formatado",
+        "acumulado_inicial",
+        "acumulado_final",
+        "calculado_em",
+    )
+
+    list_filter = (
+        "ano",
+        "mes",
+        "hospital",
+    )
+
+    search_fields = (
+        "hospital__nome",
+    )
+
+    ordering = (
+        "-ano",
+        "-mes",
+        "hospital__nome",
+    )
+
+    readonly_fields = (
+        "hospital",
+        "ano",
+        "mes",
+        "consumo",
+        "acumulado_inicial",
+        "acumulado_final",
+        "calculado_em",
+    )
+
+    list_per_page = 50
+
+    @admin.display(
+        description="Período",
+        ordering="ano"
+    )
+    def periodo(self, obj):
+        return f"{obj.mes:02d}/{obj.ano}"
+
+    @admin.display(
+        description="Consumo"
+    )
+    def consumo_formatado(self, obj):
+        return f"{obj.consumo:.2f} m³"

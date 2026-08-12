@@ -135,6 +135,43 @@
                     </div>
                 </div>
                 {% endif %}
+
+                <div class="monthly-consumption-card">
+
+                    <div class="chart-title">
+                        <i class="fas fa-chart-column"></i>
+                        Histórico de Consumo
+                    </div>
+
+                    <div class="table-responsive">
+
+                        <table class="consumption-table">
+
+                            <thead>
+
+                                <tr>
+                                    <th>Mês</th>
+                                    <th>Consumo</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="monthlyConsumptionBody">
+
+                                <tr>
+                                    <td colspan="2">
+                                        Carregando...
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
             </aside> 
         </main>
 
@@ -143,9 +180,11 @@
 {% block extra_script %}
     <script>
         const HOSPITAL_DATA_URL = "{% url 'hospital_data' %}";
+        const MONTHLY_CONSUMPTION_URL = "{% url 'monthly_consumption' %}";
         {% comment %} const ACCUMULATED_HISTORY_URL = "{% url 'accumulated_history' %}"; {% endcomment %}
     </script>
     <script src="{% static 'js/update_data.js' %}"></script>
     <script src="{% static 'js/create_update_gauge.js' %}"></script>
+    <script src="{% static 'js/monthly_consumption.js' %}"></script>
     {% comment %} <script src="{% static 'js/accumulated_chart.js' %}"></script> {% endcomment %}
 {% endblock extra_script %}

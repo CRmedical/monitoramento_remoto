@@ -136,3 +136,55 @@ class TelemetryHistory(models.Model):
 
     def __str__(self):
         return f"{self.hospital.nome} - {self.timestamp}"
+
+
+class MonthlyConsumption(models.Model):
+    hospital = models.ForeignKey(
+        Hospital,
+        on_delete=models.CASCADE,
+        related_name="consumos_mensais"
+    )
+
+    ano = models.PositiveIntegerField()
+    mes = models.PositiveIntegerField()
+
+    consumo = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        default=Decimal("0.00")
+    )
+
+    acumulado_inicial = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        null=True,
+        blank=True
+    )
+
+    acumulado_final = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        null=True,
+        blank=True
+    )
+
+    calculado_em = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    class Meta:
+        ordering = ["-ano", "-mes"]
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=["hospital", "ano", "mes"],
+                name="unique_hospital_monthly_consumption"
+            )
+        ]
+
+    def __str__(self):
+        return (
+            f"{self.hospital.nome} - "
+            f"{self.mes:02d}/{self.ano} - "
+            f"{self.consumo} m³"
+        )
