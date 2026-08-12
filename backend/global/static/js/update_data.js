@@ -11,13 +11,13 @@ async function updateData() {
                 { min: 5, max: 12, color: '#00cc44' }
             ]);
         }
-        if (data.purity !== undefined) {
-            createOrUpdateGauge('purity-gauge', data.purity, 100, 0, '', [
-                { min: 0, max: 50, color: '#ff4444' },
-                { min: 50, max: 60, color: '#ffaa00' },
-                { min: 60, max: 100, color: '#00cc44' }
-            ]);
-        }
+        // if (data.purity !== undefined) {
+        //     createOrUpdateGauge('purity-gauge', data.purity, 100, 0, '', [
+        //         { min: 0, max: 50, color: '#ff4444' },
+        //         { min: 50, max: 60, color: '#ffaa00' },
+        //         { min: 60, max: 100, color: '#00cc44' }
+        //     ]);
+        // }
         if (data.product_pressure !== undefined) {
             createOrUpdateGauge('product-gauge', data.product_pressure, 12, 0, '', [
                 { min: 0, max: 3, color: '#ff4444' },
@@ -26,13 +26,13 @@ async function updateData() {
             ]);
         }
 
-        if (data.dew_point !== undefined) {
-            createOrUpdateGauge('dew-gauge', data.dew_point, 10, -100, '', [
-                { min: -100, max: -45, color: '#00cc44' },
-                { min: -45, max: -10, color: '#ffaa00' },
-                { min: -10, max: 10, color: '#ff4444' }
-            ]);
-        }
+        // if (data.dew_point !== undefined) {
+        //     createOrUpdateGauge('dew-gauge', data.dew_point, 10, -100, '', [
+        //         { min: -100, max: -45, color: '#00cc44' },
+        //         { min: -45, max: -10, color: '#ffaa00' },
+        //         { min: -10, max: 10, color: '#ff4444' }
+        //     ]);
+        // }
 
         if (data.vacuo !== undefined) {
             createOrUpdateGauge('vacuo-gauge', Math.abs(data.vacuo), 760, 0, '', [

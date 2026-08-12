@@ -162,7 +162,7 @@ footer {
 
     border-radius: 12px;
 
-    background: var(--card-bg, #1c222b);
+    background: var(--card-bg, #ffffff);
 
     border: 1px solid
         var(--border-color, #2b323d);
@@ -173,7 +173,7 @@ footer {
     font-weight: 600;
 
     margin-bottom: 15px;
-    color: white;
+    color: #1c222b;
 }
 
 .chart-card canvas {

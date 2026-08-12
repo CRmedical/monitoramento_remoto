@@ -368,3 +368,31 @@ def telemetry_history_page(request):
             "hospitals": hospitals,
         }
     )
+
+@login_required
+def accumulated_history(request):
+    hospital = request.user.hospital
+
+    inicio = timezone.now() - timedelta(days=30)
+
+    queryset = (
+        TelemetryHistory.objects
+        .filter(
+            hospital=hospital,
+            timestamp__gte=inicio
+        )
+        .order_by("timestamp")
+    )
+
+    dados = []
+
+    for item in queryset:
+        dados.append({
+            "timestamp": item.timestamp.isoformat(),
+            "accumulated": item.accumulated,
+        })
+
+    return JsonResponse({
+        "hospital": hospital.nome,
+        "data": dados,
+    })
