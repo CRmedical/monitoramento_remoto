@@ -12,7 +12,7 @@ class AlertManager:
                  repository: AlertRepository, 
                 
                  sender: Sender,
-                 timeout_seconds: int = 300):
+                 timeout_seconds: int = 3600):
         
         self.repository = repository
         self.timeout_seconds = timeout_seconds
