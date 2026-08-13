@@ -3,7 +3,7 @@ import json
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from .models import Fault, Hospital, HospitalGroup, MonthlyConsumption
+from .models import Fault, Hospital, HospitalGroup, MonthlyConsumption, DeviceConnection
 from django.core.paginator import Paginator
 
 from datetime import timedelta
@@ -424,3 +424,39 @@ def monthly_consumption(request):
         "hospital": hospital.nome,
         "data": dados,
     })
+
+
+@login_required
+def device_connections(request):
+
+    connections = (
+        DeviceConnection.objects
+        .select_related("hospital")
+        .order_by("hospital__nome")
+    )
+
+    data = []
+
+    for device in connections:
+
+        data.append({
+            "hospital_id": device.hospital.id, #type: ignore
+            "hospital": device.hospital.nome,
+            "status": device.status,
+            "ultimo_evento": (
+                device.ultimo_evento.isoformat()
+                if device.ultimo_evento
+                else None
+            ),
+        })
+
+    return JsonResponse({
+        "devices": data
+    })
+
+@login_required
+def device_connections_page(request):
+    return render(
+        request,
+        "dashboard/device_connections.html"
+    )    

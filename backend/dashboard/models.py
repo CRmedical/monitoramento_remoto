@@ -188,3 +188,37 @@ class MonthlyConsumption(models.Model):
             f"{self.mes:02d}/{self.ano} - "
             f"{self.consumo} m³"
         )
+    
+
+class DeviceConnection(models.Model):
+    STATUS_CHOICES = [
+        ("online", "Online"),
+        ("offline", "Offline"),
+    ]
+
+    hospital = models.OneToOneField(
+        Hospital,
+        on_delete=models.CASCADE,
+        related_name="device_connection"
+    )
+
+    status = models.CharField(
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default="offline"
+    )
+
+    ultimo_evento = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+
+    atualizado_em = models.DateTimeField(
+        auto_now=True
+    )
+
+    class Meta:
+        ordering = ["hospital__nome"]
+
+    def __str__(self):
+        return f"{self.hospital.nome} - {self.status}"

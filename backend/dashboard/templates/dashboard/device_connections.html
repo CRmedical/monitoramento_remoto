@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Status dos Dispositivos
+{% endblock title %}
+
+{% block header_title %}
+Status dos Dispositivos
+{% endblock header_title %}
+
+{% block content %}
+{% include "nav.html" %}
+
+<main class="device-monitor">
+
+    <section class="connection-summary">
+
+        <div class="summary-card">
+            <span>Total</span>
+            <strong id="total-devices">0</strong>
+        </div>
+
+        <div class="summary-card online">
+            <span>Online</span>
+            <strong id="online-devices">0</strong>
+        </div>
+
+        <div class="summary-card offline">
+            <span>Offline</span>
+            <strong id="offline-devices">0</strong>
+        </div>
+
+    </section>
+
+
+    <section class="device-table-card">
+
+        <div class="table-header">
+
+            <h2>
+                <i class="fas fa-network-wired"></i>
+                Dispositivos
+            </h2>
+
+            <button
+                id="refresh-devices"
+                type="button"
+            >
+                <i class="fas fa-sync"></i>
+                Atualizar
+            </button>
+
+        </div>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Hospital</th>
+                        <th>Status</th>
+                        <th>Último evento</th>
+                    </tr>
+                </thead>
+
+                <tbody id="device-list">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+{% endblock content %}
+
+
+{% block extra_script %}
+
+<script>
+    const DEVICE_CONNECTIONS_URL =
+        "{% url 'device_connections' %}";
+</script>
+
+<script
+    src="{% static 'js/device_connections.js' %}">
+</script>
+
+{% endblock extra_script %}

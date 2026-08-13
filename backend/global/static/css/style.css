@@ -164,8 +164,6 @@ footer {
 
     background: var(--card-bg, #ffffff);
 
-    border: 1px solid
-        var(--border-color, #2b323d);
 }
 
 .chart-title {
