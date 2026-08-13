@@ -28,7 +28,7 @@ class Data:
             dew_point=payload.get("dew_point"),
             vaccum=payload.get("vacuo"),
             purity=payload.get("purity"),
-            product_pressure=payload.get('product_pressure',)
+            product_pressure=payload.get('product_pressure'),
         )
 
 @dataclass

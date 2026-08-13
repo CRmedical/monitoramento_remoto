@@ -25,7 +25,7 @@ def get_chat_id(nome):
         for chat in chats:
             return chat.chat_id
     else:
-        print("Nenhum registro encontrado para este hospital.")
+        print("Nenhum registro encontrado para este hospital: ", nome)
         print('Enviando pra o Supervisor...')
 
 class DjangoAlertRepository:
