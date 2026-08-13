@@ -13,13 +13,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app/
 
+# Coleta arquivos estáticos
 RUN python backend/manage.py collectstatic --noinput
 
 EXPOSE 8000
 
-CMD ["gunicorn", \
-     "--chdir", "/app/backend", \
-     "--bind", "0.0.0.0:8000", \
-     "--workers", "3", \
-     "--timeout", "120", \
-     "monitoramento.wsgi:application"]
+CMD ["sh", "-c", "python backend/manage.py makemigrations && python backend/manage.py migrate && exec gunicorn --chdir /app/backend --bind 0.0.0.0:8000 --workers 3 --timeout 120 monitoramento.wsgi:application"]
