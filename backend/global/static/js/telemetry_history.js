@@ -118,6 +118,15 @@ CARREGAR HISTÓRICO
 
 async function loadHistory() {
 
+    const button = document.getElementById("loadHistory");
+    const buttonText = document.getElementById("loadHistoryText");
+    const spinner = document.getElementById("loadHistorySpinner");
+
+    // Ativa carregamento
+    button.disabled = true;
+    buttonText.textContent = "Carregando...";
+    spinner.style.display = "inline-block";
+
 const hospital =
     document.getElementById(
         "hospitalSelect"
@@ -246,6 +255,13 @@ try {
     alert(
         error.message
     );
+
+} finally {
+
+    // Desativa carregamento
+    button.disabled = false;
+    buttonText.textContent = "Atualizar";
+    spinner.style.display = "none";
 }
 
 }
