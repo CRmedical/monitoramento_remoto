@@ -1,12 +1,15 @@
 {% extends "base.html" %}
 {% load static %}
+
+{% block title %} Dashboard MQTT - Monitoramento Hospitalar {% endblock title %}
+    
+{% block header_title %} Histórico de Telemetria {% endblock header_title %}
+
 {% block content %}
 {% include "nav.html" %}
 
 <div class="telemetry-page">
     <div class="telemetry-header">
-
-        <h1>Histórico de Telemetria</h1>
 
         <div class="filters">
 
