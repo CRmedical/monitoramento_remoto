@@ -145,7 +145,6 @@ class TelemetryHistoryAdmin(admin.ModelAdmin):
     )
 
     list_per_page = 100
-
 @admin.register(MonthlyConsumption)
 class MonthlyConsumptionAdmin(admin.ModelAdmin):
 
@@ -175,12 +174,6 @@ class MonthlyConsumptionAdmin(admin.ModelAdmin):
     )
 
     readonly_fields = (
-        "hospital",
-        "ano",
-        "mes",
-        "consumo",
-        "acumulado_inicial",
-        "acumulado_final",
         "calculado_em",
     )
 
