@@ -126,6 +126,15 @@
                     </div>
                 </div>
                 {% endif %}
+                
+                {% if hospital_details.phase_fault %}
+                <div class="card">
+                    <h3><i class="fas fa-redo"></i> Falta de Fase</h3>
+                    <div class="status" id="rst-status">
+                        <span class="status-text">{{ hospital_details.phase_fault }}</span>
+                    </div>
+                </div>
+                {% endif %}
 
                 {% if hospital_details.accumulated %}
                 <div class="card">
