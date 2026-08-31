@@ -12,6 +12,7 @@ class ProcessData:
         ("pressure",          operator.lt,   6.5,  "Baixa Pressão da central: {value}"),
         ("dew_point",         operator.gt, 50.0,  "Ponto de orvalho Alto: {value}"),
         ("line",              operator.lt,   5.0,  "Baixa pressão de Rede: {value}"),
+        ("phase_fault",       operator.ne, "OK", "Falta de Fase Detectada"),
     ]
 
     FLAG_RULES = [
@@ -25,6 +26,7 @@ class ProcessData:
         ("dew_point", operator.gt, 50.0, "Ponto de orvalho Alto: {value}"),
         ("purity",            operator.lt,  88.0,  "Baixa Pureza: {value}%"),
         ("product_pressure",  operator.lt,   5.0,  "Baixa pressão do Produto: {value}"),
+        ("phase_fault",       operator.ne, "OK", "Falta de Fase Detectada"),
     ]
 
 
