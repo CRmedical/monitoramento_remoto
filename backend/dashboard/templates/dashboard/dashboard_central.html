@@ -36,7 +36,7 @@
                 
                     {% if hospital_details.product_pressure %}
                         <div class="gauge-card">
-                            <h3><i class="fas fa-compress-alt"></i> Pressão do Produto</h3>
+                            <h3><i class="fas fa-compress-alt"></i> Pressão do Hospital</h3>
                             <canvas id="product-gauge" width="250" height="250"></canvas>
                             <div class="gauge-label">Bar</div>
                         </div>
@@ -44,7 +44,7 @@
 
                     {% if hospital_details.rede %}
                     <div class="gauge-card">
-                        <h3><i class="fa fa-life-ring"></i> Pressão da Rede</h3>
+                        <h3><i class="fa fa-life-ring"></i> Pressão do Hospital</h3>
                         <canvas id="rede-gauge" width="250" height="250"></canvas>
                         <div class="gauge-label">Bar</div>
                     </div>
@@ -52,7 +52,7 @@
 
                     {% if hospital_details.pressure %}
                     <div class="gauge-card">
-                        <h3><i class="fas fa-compress-alt"></i> Pressão da Central</h3>
+                        <h3><i class="fas fa-compress-alt"></i> Pressão dos Compressores</h3>
                         <canvas id="pressure-gauge" width="250" height="250"></canvas>
                         <div class="gauge-label">Bar</div>
                     </div>
@@ -120,7 +120,7 @@
 
                 {% if hospital_details.RST %}
                 <div class="card">
-                    <h3><i class="fas fa-redo"></i> Falta de Fase</h3>
+                    <h3><i class="fas fa-redo"></i> Rede Elétrica</h3>
                     <div class="status" id="rst-status">
                         <span class="status-text">{{ hospital_details.RST }}</span>
                     </div>
@@ -129,7 +129,7 @@
                 
                 {% if hospital_details.phase_fault %}
                 <div class="card">
-                    <h3><i class="fas fa-redo"></i> Falta de Fase</h3>
+                    <h3><i class="fas fa-redo"></i>Rede Elétrica</h3>
                     <div class="status" id="rst-status">
                         <span class="status-text">{{ hospital_details.phase_fault }}</span>
                     </div>
@@ -138,7 +138,7 @@
 
                 {% if hospital_details.accumulated %}
                 <div class="card">
-                    <h3><i class="fa-solid fa-chart-simple"></i> Fluxo Acumulado</h3>
+                    <h3><i class="fa-solid fa-chart-simple"></i> Volume Acumulado</h3>
                     <div class="status">
                         <span class="status-text">{{ hospital_details.accumulated|floatformat:2 }}m³</span>
                     </div>
