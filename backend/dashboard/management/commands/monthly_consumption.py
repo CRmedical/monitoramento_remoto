@@ -18,10 +18,10 @@ class Command(BaseCommand):
         # Primeiro dia do mês atual
         inicio_mes_atual = agora.replace(
             day=1,
-            hour=0,
-            minute=0,
-            second=0,
-            microsecond=0
+            # hour=0,
+            # minute=0,
+            # second=0,
+            # microsecond=0
         )
 
         # Estamos fechando o mês anterior

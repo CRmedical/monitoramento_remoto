@@ -13,11 +13,13 @@ class ProcessData:
         ("dew_point",         operator.gt, 50.0,  "Ponto de orvalho Alto: {value}"),
         ("line",              operator.lt,   5.0,  "Baixa pressão de Rede: {value}"),
         ("phase_fault",       operator.ne, "OK", "Falta de Fase Detectada"),
+        ("RST",       operator.ne, "OK", "Falta de Fase Detectada"),
     ]
 
     FLAG_RULES = [
         ("phase_fault", operator.ne, "OK", "Falta de Fase Detectada"),
         ("emergency_btn",  operator.ne, "OK", "Botão de Emergência"),
+        ("RST",       operator.ne, "OK", "Falta de Fase Detectada"),
     ]
 
     HOSPITAL_RULES = [
@@ -27,6 +29,7 @@ class ProcessData:
         ("purity",            operator.lt,  88.0,  "Baixa Pureza: {value}%"),
         ("product_pressure",  operator.lt,   5.0,  "Baixa pressão do Produto: {value}"),
         ("phase_fault",       operator.ne, "OK", "Falta de Fase Detectada"),
+        ("RST",       operator.ne, "OK", "Falta de Fase Detectada"),
     ]
 
 
