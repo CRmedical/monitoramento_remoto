@@ -163,12 +163,12 @@ class Command(BaseCommand):
             )
 
             acumulado_inicial_calculado = (
-                acumulado_inicial * fator
-            ) + offset
+                acumulado_inicial
+            )
 
             acumulado_final_calculado = (
-                acumulado_final * fator
-            ) + offset
+                acumulado_final
+            )
 
             # =================================================
             # CONSUMO
