@@ -1,10 +1,13 @@
 from decimal import Decimal
-from datetime import datetime, time
 
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from dashboard.models import Hospital, TelemetryHistory, MonthlyConsumption
+from dashboard.models import (
+    Hospital,
+    TelemetryHistory,
+    MonthlyConsumption
+)
 
 
 class Command(BaseCommand):
@@ -15,16 +18,22 @@ class Command(BaseCommand):
 
         agora = timezone.localtime()
 
+        # -------------------------------------------------
         # Primeiro dia do mês atual
+        # -------------------------------------------------
+
         inicio_mes_atual = agora.replace(
             day=1,
-            # hour=0,
-            # minute=0,
-            # second=0,
-            # microsecond=0
+            hour=0,
+            minute=0,
+            second=0,
+            microsecond=0
         )
 
-        # Estamos fechando o mês anterior
+        # -------------------------------------------------
+        # Mês anterior
+        # -------------------------------------------------
+
         if inicio_mes_atual.month == 1:
 
             ano_anterior = inicio_mes_atual.year - 1
@@ -35,7 +44,10 @@ class Command(BaseCommand):
             ano_anterior = inicio_mes_atual.year
             mes_anterior = inicio_mes_atual.month - 1
 
+        # -------------------------------------------------
         # Primeiro dia do mês anterior
+        # -------------------------------------------------
+
         inicio_mes_anterior = inicio_mes_atual.replace(
             year=ano_anterior,
             month=mes_anterior
@@ -50,66 +62,97 @@ class Command(BaseCommand):
 
         for hospital in hospitais:
 
-            # -------------------------------------------------
-            # Leitura inicial
-            # -------------------------------------------------
+            # =================================================
+            # LEITURA INICIAL
+            # =================================================
+            #
+            # Pega a última leitura ANTES do início do
+            # mês anterior.
+            #
+            # Exemplo:
+            #
+            # Fechando agosto/2026
+            #
+            # pega a última leitura disponível antes de
+            # 01/08/2026.
+            #
+            # Se não existir, começa em ZERO.
+            # =================================================
 
             leitura_inicial = (
                 TelemetryHistory.objects
                 .filter(
                     hospital=hospital,
-                    timestamp__gte=inicio_mes_anterior,
-                    timestamp__lt=inicio_mes_atual,
+                    timestamp__lt=inicio_mes_anterior,
                     accumulated__isnull=False
                 )
-                .order_by("timestamp")
+                .order_by("-timestamp")
                 .first()
             )
 
-            # -------------------------------------------------
-            # Leitura final
-            # -------------------------------------------------
+            if leitura_inicial:
+
+                acumulado_inicial = Decimal(
+                    str(leitura_inicial.accumulated)
+                )
+
+                self.stdout.write(
+                    f"{hospital.nome}: "
+                    f"leitura inicial encontrada: "
+                    f"{acumulado_inicial}"
+                )
+
+            else:
+
+                acumulado_inicial = Decimal("0.00")
+
+                self.stdout.write(
+                    self.style.WARNING(
+                        f"{hospital.nome}: "
+                        f"sem leitura anterior. "
+                        f"Usando acumulado inicial = 0."
+                    )
+                )
+
+            # =================================================
+            # LEITURA FINAL
+            # =================================================
+            #
+            # Pega a leitura MAIS RECENTE disponível.
+            #
+            # Isso faz com que o comando considere o valor
+            # acumulado no momento da execução.
+            # =================================================
 
             leitura_final = (
                 TelemetryHistory.objects
                 .filter(
                     hospital=hospital,
-                    timestamp__gte=inicio_mes_atual,
+                    timestamp__lt=agora,
                     accumulated__isnull=False
                 )
-                .order_by("timestamp")
+                .order_by("-timestamp")
                 .first()
             )
 
-            if not leitura_inicial:
-                self.stdout.write(
-                    self.style.WARNING(
-                        f"{hospital.nome}: "
-                        f"sem leitura inicial."
-                    )
-                )
-                continue
-
             if not leitura_final:
+
                 self.stdout.write(
                     self.style.WARNING(
                         f"{hospital.nome}: "
-                        f"sem leitura final."
+                        f"sem nenhuma leitura disponível."
                     )
                 )
-                continue
 
-            acumulado_inicial = Decimal(
-                str(leitura_inicial.accumulated)
-            )
+                continue
 
             acumulado_final = Decimal(
                 str(leitura_final.accumulated)
             )
 
-            # -------------------------------------------------
-            # Aplicar multiplicador
-            # -------------------------------------------------
+            # =================================================
+            # APLICAR MULTIPLICADOR E OFFSET
+            # =================================================
 
             fator = Decimal(
                 str(hospital.multiplicador_acumulado)
@@ -119,31 +162,34 @@ class Command(BaseCommand):
                 str(hospital.offset_acumulado)
             )
 
-            acumulado_inicial = (
+            acumulado_inicial_calculado = (
                 acumulado_inicial * fator
             ) + offset
 
-            acumulado_final = (
+            acumulado_final_calculado = (
                 acumulado_final * fator
             ) + offset
 
-            # -------------------------------------------------
-            # Consumo
-            # -------------------------------------------------
+            # =================================================
+            # CONSUMO
+            # =================================================
 
             consumo = (
-                acumulado_final -
-                acumulado_inicial
+                acumulado_final_calculado
+                - acumulado_inicial_calculado
             )
 
-            consumo = max(
-                consumo,
-                Decimal("0.00")
+            # Evita consumo negativo
+            if consumo < Decimal("0.00"):
+                consumo = Decimal("0.00")
+
+            consumo = consumo.quantize(
+                Decimal("0.01")
             )
 
-            # -------------------------------------------------
-            # Salvar
-            # -------------------------------------------------
+            # =================================================
+            # SALVAR
+            # =================================================
 
             MonthlyConsumption.objects.update_or_create(
 
@@ -158,10 +204,10 @@ class Command(BaseCommand):
                     "consumo": consumo,
 
                     "acumulado_inicial":
-                        acumulado_inicial,
+                        acumulado_inicial_calculado,
 
                     "acumulado_final":
-                        acumulado_final,
+                        acumulado_final_calculado,
 
                 }
             )
@@ -169,7 +215,11 @@ class Command(BaseCommand):
             self.stdout.write(
                 self.style.SUCCESS(
                     f"{hospital.nome}: "
-                    f"{consumo:.2f} m³"
+                    f"{consumo:.2f} m³ "
+                    f"(Inicial: "
+                    f"{acumulado_inicial_calculado:.2f} | "
+                    f"Final: "
+                    f"{acumulado_final_calculado:.2f})"
                 )
             )
 
