@@ -36,9 +36,9 @@ async function updateData() {
 
         if (data.vacuo !== undefined) {
             createOrUpdateGauge('vacuo-gauge', -Math.abs(data.vacuo), 0, -760, '', [
-                { min: 0, max: -300, color: '#ff4444' },
-                { min: -300, max: -400, color: '#ffaa00' },
-                { min: -400, max: -760, color: '#00cc44' }
+                { min: -300, max: 0, color: '#ff4444' },
+                { min: -400, max: -300, color: '#ffaa00' },
+                { min: -760, max: -400, color: '#00cc44' }
             ]);
         }
 
