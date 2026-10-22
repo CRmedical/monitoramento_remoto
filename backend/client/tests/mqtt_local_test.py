@@ -6,10 +6,10 @@ import paho.mqtt.client as mqtt
 
 
 # Configurações do broker
-BROKER = "9281d6a0da6d4dc6a8bc4ce9498e7c52.s1.eu.hivemq.cloud"
-PORT = 8883
+BROKER = "200.241.55.229"
+PORT = 1883
 
-USERNAME = "Piaui_on_off"
+USERNAME = "mqttadmin"
 PASSWORD = "Da32525291"
 
 TOPICO_PUBLICAR = "teste/python/dados"
