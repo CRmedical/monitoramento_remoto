@@ -12,6 +12,7 @@ DEBUG = os.getenv('DEBUG', False).lower() == 'true'
 ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = [
     "https://crmonitoramento.omnisistems.com.br",
+    "https://telemetria-telemetria-dashboard.e1tzze.easypanel.host",
     ]
 
 INSTALLED_APPS = [

@@ -1,30 +1,42 @@
-
-import paho.mqtt.client as mqtt
 import json
 import time
 from datetime import datetime
 
-# Configurações do broker local
-BROKER = "192.168.0.151"
-PORT = 1883
+import paho.mqtt.client as mqtt
+
+
+# Configurações do broker
+BROKER = "9281d6a0da6d4dc6a8bc4ce9498e7c52.s1.eu.hivemq.cloud"
+PORT = 8883
+
+USERNAME = "Piaui_on_off"
+PASSWORD = "Da32525291"
 
 TOPICO_PUBLICAR = "teste/python/dados"
 TOPICO_RECEBER = "teste/python/comandos"
 
 CLIENT_ID = "cliente_python_teste"
 
-# Executada quando o cliente conecta ao broker
+
 def on_connect(client, userdata, flags, reason_code, properties):
     if reason_code == 0:
         print("Conectado ao broker MQTT!")
 
-        # Inscreve-se no tópico para receber mensagens
-        client.subscribe(TOPICO_RECEBER)
-        print(f"Inscrito no tópico: {TOPICO_RECEBER}")
-    else:
-        print(f"Falha na conexão. Código: {reason_code}")
+        resultado, mid = client.subscribe(TOPICO_RECEBER)
 
-# Executada quando uma mensagem chega
+        if resultado == mqtt.MQTT_ERR_SUCCESS:
+            print(f"Inscrito no tópico: {TOPICO_RECEBER}")
+        else:
+            print(f"Falha ao assinar tópico: {resultado}")
+    else:
+        print(f"Falha na conexão: {reason_code}")
+
+
+def on_disconnect(client, userdata, disconnect_flags, reason_code, properties):
+    if reason_code != 0:
+        print(f"Desconexão inesperada: {reason_code}")
+
+
 def on_message(client, userdata, message):
     payload = message.payload.decode("utf-8")
 
@@ -32,23 +44,28 @@ def on_message(client, userdata, message):
     print(f"Tópico: {message.topic}")
     print(f"Mensagem: {payload}")
 
-# Cria o cliente MQTT usando a API atual do Paho
+
 client = mqtt.Client(
-    callback_api_version=mqtt.CallbackAPIVersion.VERSION2, #type: ignore
+    callback_api_version=mqtt.CallbackAPIVersion.VERSION2,
     client_id=CLIENT_ID,
-    protocol=mqtt.MQTTv311
+    protocol=mqtt.MQTTv311,
 )
 
+# Autenticação obrigatória
+client.username_pw_set(USERNAME, PASSWORD)
+
 client.on_connect = on_connect
+client.on_disconnect = on_disconnect
 client.on_message = on_message
 
 try:
     print(f"Conectando a {BROKER}:{PORT}...")
 
     client.connect(BROKER, PORT, keepalive=60)
-
-    # Inicia o processamento de mensagens em segundo plano
     client.loop_start()
+
+    while not client.is_connected():
+        time.sleep(0.1)
 
     while True:
         dados = {
@@ -56,9 +73,7 @@ try:
             "temperatura": 25.5,
             "pressao": 7.2,
             "status": "online",
-            "timestamp": datetime.now().isoformat(
-                timespec="seconds"
-            )
+            "timestamp": datetime.now().isoformat(timespec="seconds"),
         }
 
         mensagem = json.dumps(dados, ensure_ascii=False)
@@ -66,14 +81,14 @@ try:
         resultado = client.publish(
             TOPICO_PUBLICAR,
             mensagem,
-            qos=0
+            qos=0,
         )
 
         if resultado.rc == mqtt.MQTT_ERR_SUCCESS:
-            print(f"\nPublicado em {TOPICO_PUBLICAR}:")
+            print(f"\nMensagem enfileirada para {TOPICO_PUBLICAR}:")
             print(mensagem)
         else:
-            print("Erro ao publicar mensagem.")
+            print(f"Falha ao enfileirar mensagem: código {resultado.rc}")
 
         time.sleep(5)
 
