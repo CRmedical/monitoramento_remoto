@@ -5,7 +5,7 @@ import time
 from datetime import datetime
 
 # Configurações do broker local
-BROKER = "mqttbroker.omnisistems.com.br"
+BROKER = "http://200.241.55.229:"
 PORT = 1883
 
 TOPICO_PUBLICAR = "teste/python/dados2"

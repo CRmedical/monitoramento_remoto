@@ -7,7 +7,8 @@ def run_mqtt():
     load_dotenv()
 
     broker = str(os.getenv('BROKER'))
-    port = 1883
+    port_str = os.getenv('PORT')
+    port = int(port_str) #type: ignore
     user = str(os.getenv('USER_BROKER'))
     password = str(os.getenv('PASSWORD_BROKER'))
     topics = str(os.getenv('TOPICS'))

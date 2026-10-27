@@ -200,7 +200,8 @@ class MqttHandler:
         client.on_message = self.on_message
 
         client.username_pw_set(self.username, self.password)
-        client.tls_set()
+        if self.port == 8883:
+            client.tls_set()
 
         client.connect(self.broker, self.port, 60)
         client.loop_forever()
